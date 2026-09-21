@@ -1,0 +1,28 @@
+\contentsline {section}{\numberline {1}Turing Machines}{1}{section.1}%
+\contentsline {section}{\numberline {2}Langton's Ant}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Turmitic Solitons}{3}{subsection.2.1}%
+\contentsline {section}{\numberline {3}Simplest Turing Machines}{4}{section.3}%
+\contentsline {section}{\numberline {A}Prior Works}{5}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Cellular automata, mobile automata, and rule-space surveys}{5}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Interacting turmites and shared-tape agents}{5}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Algorithmic chemistry and Fontana's Turing gas}{6}{subsection.A.3}%
+\contentsline {subsection}{\numberline {A.4}Eulerian walkers and rotor-router theory}{6}{subsection.A.4}%
+\contentsline {subsection}{\numberline {A.5}Quantifying tape structure and relaxation}{7}{subsection.A.5}%
+\contentsline {subsection}{\numberline {A.6}Boundary-driven states and thermodynamic costs}{7}{subsection.A.6}%
+\contentsline {subsection}{\numberline {A.7}Scope of the present problem}{8}{subsection.A.7}%
+\contentsline {section}{\numberline {B}Notes on Langton's Ant}{8}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Rotor representation}{9}{subsection.B.1}%
+\contentsline {subsection}{\numberline {B.2}Odometer representation and a route to a solution}{10}{subsection.B.2}%
+\contentsline {subsection}{\numberline {B.3}An attempt at a boundary-driven solution}{11}{subsection.B.3}%
+\contentsline {paragraph}{Choice of reservoirs and update convention.}{11}{section*.3}%
+\contentsline {paragraph}{A finite Markov problem for tape and support.}{11}{section*.4}%
+\contentsline {paragraph}{Why the finite open system has a unique steady state.}{12}{section*.5}%
+\contentsline {paragraph}{Exact stationary identities and the first closure problem.}{13}{section*.6}%
+\contentsline {paragraph}{Exact finite-size mass observables without a mass cutoff.}{14}{section*.7}%
+\contentsline {paragraph}{A controlled solution for rare injection.}{14}{section*.8}%
+\contentsline {paragraph}{A matrix-product starting point and the remaining problem.}{15}{section*.9}%
+\contentsline {paragraph}{Checks on the calculation.}{16}{section*.10}%
+\contentsline {section}{\numberline {C}Spacetime zoo}{17}{appendix.C}%
+\contentsline {paragraph}{Reading the plots.}{17}{section*.11}%
+\contentsline {paragraph}{Ensembles and initial conditions.}{17}{section*.12}%
+\contentsline {paragraph}{Updates, boundaries, and panel labels.}{17}{section*.13}%
