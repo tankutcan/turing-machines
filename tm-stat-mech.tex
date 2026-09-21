@@ -1,0 +1,801 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2026
+
+% The authors should use one of these tracks.
+% Before accepting by the NeurIPS conference, select one of the options below.
+% 0. "default" for submission
+%\usepackage[preprint]{neurips_2026}
+% the "default" option is equal to the "main" option, which is used for the Main Track with double-blind reviewing.
+% 1. "main" option is used for the Main Track
+%  \usepackage[main]{neurips_2026}
+% 2. "position" option is used for the Position Paper Track
+%  \usepackage[position]{neurips_2026}
+% 3. "eandd" option is used for the Evaluations & Datasets Track
+ % \usepackage[eandd]{neurips_2026}
+% 4. "creativeai" option is used for the Creative AI Track
+%  \usepackage[creativeai]{neurips_2026}
+% 5. "sglblindworkshop" option is used for the Workshop with single-blind reviewing
+ % \usepackage[sglblindworkshop]{neurips_2026}
+% 6. "dblblindworkshop" option is used for the Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop]{neurips_2026}
+
+% After being accepted, the authors should add "final" behind the track to compile a camera-ready version.
+% 1. Main Track
+ % \usepackage[main, final]{neurips_2026}
+% 2. Position Paper Track
+%  \usepackage[position, final]{neurips_2026}
+% 3. Evaluations & Datasets Track
+ % \usepackage[eandd, final]{neurips_2026}
+% 4. Creative AI Track
+%  \usepackage[creativeai, final]{neurips_2026}
+% 5. Workshop with single-blind reviewing
+%  \usepackage[sglblindworkshop, final]{neurips_2026}
+% 6. Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop, final]{neurips_2026}
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote.
+% For workshops (5., 6.), the authors should add the name of the workshop, "\workshoptitle" command is used to set the workshop title.
+% \workshoptitle{WORKSHOP TITLE}
+
+% "preprint" option is used for arXiv or other preprint submissions
+ % \usepackage[preprint]{neurips_2026}
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2026}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage[numbers,sort&compress]{natbib} % numbered literature citations
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{amsmath}        % align, cases, \text
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{graphicx}       % figures
+
+\providecommand{\doi}[1]{\href{https://doi.org/#1}{doi:\nolinkurl{#1}}}
+
+\graphicspath{{../data/}{data/}}
+
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote. 
+\title{Statistical Mechanics of Turing Machines}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  Tankut ~Can\\
+  Department of Physics\\
+  Emory University\\
+  Atlanta, GA 30022 \\
+  \texttt{tcan@emory.edu} \\
+  % examples of more authors
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{Prior Works}
+\label{sec:prior-works}
+
+The systems considered here consist of mobile finite-state machines that
+read and modify a shared tape.  Their collective behavior connects several
+existing research programs: cellular automata, interacting turmites,
+algorithmic chemistry, deterministic walks in a writable environment, and
+nonequilibrium statistical mechanics.  The distinction between these
+connections matters.  Some references study nearly the same microscopic
+architecture; others supply observables or solution methods whose
+assumptions must be checked for the present dynamics.
+
+\subsection{Cellular automata, mobile automata, and rule-space surveys}
+
+Wolfram's statistical-mechanical study of cellular
+automata~\citep{wolfram1983statistical} is a methodological precedent for
+sampling simple deterministic rules, evolving random initial conditions,
+and comparing the resulting organization.  It demonstrates that local
+binary rules can generate structured statistical behavior without an
+equilibrium energy function.  In a cellular automaton, the sites update
+through a prescribed spatial rule; in the present simulations, the moving
+heads determine where updates occur.  Their positions therefore form an
+additional dynamical field.
+
+\emph{A New Kind of Science}~\citep{wolfram2002nks} extends systematic
+experimentation to Turing machines and mobile automata, including generalized
+mobile automata with multiple active cells.  These examples motivate the
+spacetime zoos and comparisons between blank and random tapes.  The
+associated 2003 collection of open problems~\citep{wolfram2003open} calls
+for systematic studies of simple Turing machines, nonblank initial
+conditions, and the relation between active-cell density and behavioral
+complexity.  Those historical questions closely match the present program,
+but their appearance in that collection does not establish their current
+research status.  Wolfram's later multiway Turing
+machines~\citep{wolfram2021multiway} concern branching computational
+histories under nondeterministic rules.  Multiple branches are distinct
+from a population of heads simultaneously modifying a single tape.
+
+\subsection{Interacting turmites and shared-tape agents}
+
+Belgacem and Fat\`es~\citep{belgacem2012turmites} provide a direct spatial
+precedent by studying multiple Langton turmites on a shared binary lattice.
+They compare synchronous updates, a fixed sequential order, and random
+sequential orders, together with different policies for spatial conflicts.
+Their experiments show that collective patterns depend on the scheduling
+and interaction conventions, even when the individual agent rule stays
+fixed.  This supports treating update order and collision resolution as
+model parameters in our simulations.  Their model is two-dimensional and
+includes agent orientation and movement-conflict policies, so its
+collective structures do not directly determine the behavior of the
+one-dimensional rules studied below.
+
+Polhill and collaborators~\citep{polhill2021prediction} explicitly consider
+a population of Turing machines reading and writing the same tape.  Their
+thought experiment studies prediction when transition tables, initial head
+states and positions, and execution schedules are hidden.  It establishes
+a close architectural precedent, while addressing inference and
+computability rather than deriving stationary measures or transport laws.
+In particular, its discussion of noncomputable schedules should be
+distinguished from the reproducible, seeded random schedules used in
+numerical experiments here.
+
+\subsection{Algorithmic chemistry and Fontana's Turing gas}
+
+Fontana's algorithmic chemistry~\citep{fontana1991chemistry} treats an
+ensemble of symbolic functions as interacting objects.  In this
+``Turing gas,'' expressions derived from the lambda calculus act on one
+another to generate new expressions, and the population develops
+cooperative organizations.  This supplies an early precedent for studying
+collective behavior in a population of programs.
+
+Fontana and Buss~\citep{fontana1994tape} subsequently analyze the emergence
+of reproducing and self-maintaining organizations in this abstract
+chemistry.  Their work suggests examining which interaction patterns
+persist across different initial populations.  The correspondence to our
+model is conceptual: their reacting objects are themselves programs, and
+reactions change the program population.  Here the sampled transition
+tables remain fixed and the shared spatial tape carries the evolving
+record of interactions.  Thus algorithmic chemistry motivates questions
+about collective organization, but its reaction rules cannot be imported
+as the dynamics of the present gas.
+
+\subsection{Eulerian walkers and rotor-router theory}
+
+The symbol-flipping one-state machine has a particularly close connection
+to rotor walks: successive occupied visits alternate the departure
+direction at a site.  Priezzhev and
+collaborators~\citep{priezzhev1996eulerian} study walkers that modify local
+arrows and, on open graphs, are replaced after absorption.  Their particle
+addition operators connect the stationary problem to the Abelian sandpile
+model.  Holroyd and collaborators~\citep{holroyd2008rotor} give a systematic
+treatment of rotor routing, its Abelian properties, and the relation
+between recurrent rotor configurations and rooted spanning trees.
+
+These results apply directly to the isolated-particle excursions used in
+the dilute boundary-driven calculation in
+Appendix~\ref{sec:boundary-driven}, after matching the convention for
+whether a rotor records the last or next departure.  In particular, the
+recurrent empty tapes $1^k0^{L-k}$ are the one-dimensional version of
+acyclic rotor configurations with absorbing boundaries.  The dilute
+calculation should therefore be understood in the context of established
+rotor-router theory, rather than as an unrelated mechanism.
+
+Klasing and collaborators~\citep{klasing2017ring} analyze several agents
+sharing a rotor environment on a ring, obtaining rigorous cover-time and
+long-time return-time results.  A decisive microscopic difference is that
+their rotor advances once per departing agent: two agents at one site can
+leave in opposite directions.  In our synchronous symbol-flipping model,
+the tape flips once per \emph{occupied site}, and all particles in a stack
+depart together.  Stacks that meet at one site merge permanently.  The
+published multi-agent bounds and Abelian arguments therefore do not
+automatically extend to this coalescing dynamics.  They identify useful
+tools and solvable sectors, while leaving a distinct problem at finite
+stack density.
+
+\subsection{Quantifying tape structure and relaxation}
+
+Computational mechanics provides observables that distinguish visible
+organization from simple changes in symbol frequency.  Shalizi and
+collaborators~\citep{shalizi2006filters} develop local sensitivity and
+statistical-complexity filters for detecting coherent structures in
+spatiotemporal systems.  Applied to cellular automata, these reveal domains
+and localized structures without assuming their shapes in advance.  For
+the present spacetime plots, such filters suggest a way to quantify
+traveling structures and collision regions, supplementing head trajectories
+and tape density.
+
+Feldman, McTague, and Crutchfield~\citep{feldman2008complexity} compare
+processes using complexity--entropy diagrams, combining randomness with
+stored structure.  This is relevant because a tape with equal numbers of
+zeros and ones can still be periodic or strongly correlated.  Useful
+measurements here would include block entropies, entropy rates, excess
+entropy, spatial correlations, and correlations between head states and
+local symbols.  Estimating them requires specifying the ensemble and
+checking stationarity; pooling different machine rules or different ages
+of a relaxing system can otherwise obscure the distinction between
+within-run fluctuations and variation across runs.  Convergence of these
+observables would provide evidence of statistical relaxation, but would not by
+itself identify a Gibbs ensemble or a temperature.
+
+\subsection{Boundary-driven stationary states and thermodynamic costs}
+
+The review by Bu\v{c}a, Klobas, and
+Prosen~\citep{buca2021rule54} describes exact nonequilibrium stationary
+states of the reversible Rule-54 cellular automaton with stochastic
+boundaries, including patch and matrix-product representations, relaxation
+modes, and current fluctuations.  It supplies a concrete strategy for the
+boundary-driven attempt below: specify the reservoirs, construct the
+Markov operator, solve small systems, and search for a representation
+whose local algebra verifies stationarity.  Its exact formulas depend on
+that model's microscopic structure.  Our synchronous coalescence rule
+does not inherit those formulas merely because it also admits a
+cellular-automaton description.  The transferable object is the
+stationary-state problem and the methods used to attack it.
+
+Strasberg and collaborators~\citep{strasberg2015thermodynamics} address a
+different thermodynamic question by constructing stochastic physical
+implementations of Turing machines with consistent entropy production.
+Their results concern the cost of performing computation.  A statistical
+ensemble of abstract shared-tape machines does not yet specify the energy
+levels, physical transition rates, or reservoirs needed to assign heat
+and work.  For this reason, tape Shannon entropy and state-distribution
+entropy should initially be treated as information-theoretic observables,
+not identified with physical entropy production.
+
+\subsection{Scope of the present problem}
+
+Together, these references establish precedents for computational
+populations, agents coupled through writable media, and statistical
+descriptions of deterministic local dynamics.  Within the works reviewed
+here, we have not identified a general stationary or hydrodynamic theory
+covering arbitrary randomly sampled transition tables under the present
+shared-tape collision rules; this is a statement about the scope of this
+review, not a claim of priority.
+
+A useful formulation separates randomness in the initial tape and head
+states from randomness in the transition tables.  Sampling a table once
+and retaining it defines quenched algorithmic disorder; resampling it
+during evolution would define a different process.  The closed-system
+limit should specify particle number $N$, tape length $L$, and density
+$N/L$, while an open-system limit must also fix how reservoir rates scale
+with $L$.  The one-state symbol-flipping model below isolates a tractable
+part of this broader program: it connects directly to rotor walks in the
+single-stack sector and introduces irreversible coalescence when several
+stacks interact synchronously.
+
+
+\section{Langton's Ant}
+
+The first simple example we start with is Langton's ant, or turmite, on a one dimensional line. The rules are simple. 
+
+
+$\begin{array}{ccc}
+{\rm Read} & {\rm Write} & {\rm Move} \\
+0 & 1 & Left\\
+1 & 0 & Right
+\end{array}$
+
+Let us define the tape at time $t$ at position $x$ as $V_{t}(x) \in \{0,1\}$, and the number of turmites at position $x$ and time $t$ as $n_{t}(x)$. The update rules for turmits which are not restricted in their motion is
+
+\begin{align}
+V_{t+1}(x) &= V_{t}(x) + \Theta(n_{t}(x)) \left(1 - 2 V_{t}(x)\right)\\
+n_{t+1}(x)  & =  \left(1 - V_{t}(x+1)\right) n_{t}(x + 1) + V_{t}(x - 1) n_{t}(x - 1)
+\end{align}
+
+
+
+
+\appendix
+\section{scratchpad}
+
+\subsection{Exact synchronous equations for the symbol-flipping machine}
+
+The rule considered above is
+\begin{equation}
+0 \longrightarrow (1,L),
+\qquad
+1 \longrightarrow (0,R).
+\end{equation}
+It is useful to distinguish the number of turmites at a site from the Boolean
+event that the site is occupied.  Define
+\begin{equation}
+I_t(x) = \mathbf{1}_{\{n_t(x)>0\}}.
+\end{equation}
+Thus, throughout this section, $\Theta(n)$ is understood to equal zero at
+$n=0$ and one for $n>0$.
+
+Under synchronous updating, all turmites first read the tape at time $t$,
+then propose their writes and moves.  Since all turmites at a given site read
+the same symbol, their write proposals agree.  The exact tape update is
+therefore
+\begin{align}
+V_{t+1}(x)
+&= V_t(x) + I_t(x)\left[1-2V_t(x)\right] \\
+&= V_t(x) \mathbin{\oplus} I_t(x),
+\end{align}
+where $\oplus$ denotes addition modulo two.
+
+A turmite at $x+1$ enters $x$ if it reads zero and moves left, whereas a
+turmite at $x-1$ enters $x$ if it reads one and moves right.  Consequently,
+the exact number update is
+\begin{equation}
+\boxed{
+n_{t+1}(x)
+= \left[1-V_t(x+1)\right]n_t(x+1)
++ V_t(x-1)n_t(x-1).
+}
+\label{eq:exact-number-update}
+\end{equation}
+This agrees with the number update in the main text.  If the equation is
+instead written for the increment $n_{t+1}(x)-n_t(x)$, its right-hand side
+must include the additional loss term $-n_t(x)$.
+
+To display number conservation, define the rightward current across the bond
+$x+\tfrac12$ by
+\begin{equation}
+J_t\left(x+\tfrac12\right)
+= V_t(x)n_t(x)
+- \left[1-V_t(x+1)\right]n_t(x+1).
+\end{equation}
+The number equation then takes the continuity form
+\begin{equation}
+n_{t+1}(x)-n_t(x)
+= J_t\left(x-\tfrac12\right)-J_t\left(x+\tfrac12\right).
+\end{equation}
+On an infinite tape with suitable decay, or on a periodic tape with all site
+indices understood modulo $L$, this implies
+\begin{equation}
+\sum_x n_{t+1}(x)=\sum_x n_t(x)=N.
+\end{equation}
+
+\subsection{Rotor representation}
+
+Define a binary rotor field
+\begin{equation}
+\sigma_t(x)=2V_t(x)-1 \in \{-1,+1\},
+\end{equation}
+where $-1$ sends a stack left and $+1$ sends it right.  The coupled equations
+become
+\begin{align}
+\sigma_{t+1}(x)
+&= (-1)^{I_t(x)}\sigma_t(x), \\
+n_{t+1}(x)
+&= \frac{1-\sigma_t(x+1)}{2}n_t(x+1)
++ \frac{1+\sigma_t(x-1)}{2}n_t(x-1).
+\end{align}
+The first equation says that an occupied site reverses its rotor exactly once,
+independently of the number of turmites in the stack.
+
+The tape and the support of the turmite distribution form a closed Boolean
+system.  In particular,
+\begin{equation}
+\boxed{
+I_{t+1}(x)
+= \left[I_t(x-1)\land V_t(x-1)\right]
+\lor
+\left[I_t(x+1)\land \neg V_t(x+1)\right].
+}
+\end{equation}
+Together with $V_{t+1}=V_t\oplus I_t$, this is a deterministic, nearest-neighbor
+four-state cellular automaton for $(V_t,I_t)$.  The integer masses $n_t(x)$ can
+be transported after the Boolean dynamics have been solved.
+
+Every occupied site sends its entire stack to one neighboring site.  Two
+stacks that arrive at the same site merge and can never split again.  Hence
+the number of occupied sites
+\begin{equation}
+K_t=\sum_x I_t(x)
+\end{equation}
+is nonincreasing:
+\begin{equation}
+K_{t+1}\leq K_t.
+\end{equation}
+This monotonic coalescence property is a useful simplification even though the
+conserved mass $N$ need not decrease.
+
+\subsection{Odometer representation and a route to a solution}
+
+Introduce the site odometer
+\begin{equation}
+u_t(x)=\sum_{\tau=0}^{t-1} I_\tau(x),
+\end{equation}
+which counts the number of time steps at which site $x$ has been occupied.
+The tape can then be eliminated in favor of its initial condition:
+\begin{equation}
+\sigma_t(x)=\sigma_0(x)(-1)^{u_t(x)}.
+\end{equation}
+For a single stack at position $X_t$, this gives the closed rotor-walk form
+\begin{equation}
+X_{t+1}
+= X_t + \sigma_0(X_t)(-1)^{u_t(X_t)}.
+\end{equation}
+
+A possible route toward solving the many-turmite system is the following.
+\begin{enumerate}
+    \item Solve the single-stack rotor walk in terms of its odometer, visited
+    interval, and return times.
+
+    \item Classify two-stack scattering and determine the conditions for
+    coalescence.  On an even ring, each step changes position parity, so two
+    stacks can occupy the same site at the same time only if their initial
+    positions have the same parity.
+
+    \item Analyze the four-state cellular automaton $(V,I)$ on small periodic
+    rings by constructing its complete transition graph.  This gives exact
+    attractors, periods, traveling waves, and basin sizes without retaining
+    the stack masses.
+
+    \item Use the fact that a deterministic system on a finite ring must
+    eventually become periodic.  A traveling orbit that advances by $d$
+    sites in $P$ time steps has the rational velocity
+    \begin{equation}
+    v=\frac{d}{P}.
+    \end{equation}
+    This provides a possible explanation for the recurring rational
+    velocities observed numerically.
+
+    \item Once the support dynamics and its coalescence events are known,
+    propagate the conserved integer masses along those trajectories to
+    recover $n_t(x)$ and the mass-weighted velocity distribution.
+\end{enumerate}
+
+The other symbol-flipping one-state machine,
+$0\longrightarrow(1,R)$ and $1\longrightarrow(0,L)$, is obtained from the
+system above by the spatial reflection $x\mapsto -x$.  Solving one rule
+therefore solves its mirror as well.
+
+\subsection{An attempt at a boundary-driven solution}
+\label{sec:boundary-driven}
+
+The boundary-driven strategy is to keep the deterministic bulk rule and
+introduce randomness only through particle reservoirs.  One then solves for
+a stationary probability distribution and its currents.  The review by
+Bu\v{c}a, Klobas, and Prosen~\citep{buca2021rule54} illustrates this
+strategy using patch and matrix-product stationary states.  Here we apply
+the general strategy to the symbol-flipping model itself.  The results below
+include exact stationary identities, an existence and uniqueness argument,
+and a solution to leading order in the injection rates; an arbitrary-density
+closed-form stationary distribution remains to be found.
+
+\paragraph{Choice of reservoirs and update convention.}
+Take an interval $x=1,\ldots,L$, with $L\geq2$.  Particles leaving either end
+are absorbed.  At each time step, independent variables
+\begin{equation}
+b_t^{\mathrm L}\sim\operatorname{Bernoulli}(\alpha),\qquad
+b_t^{\mathrm R}\sim\operatorname{Bernoulli}(\beta)
+\end{equation}
+inject one particle at the left and right endpoints, respectively.  These
+variables are independent of the configuration and of previous injections.
+First the old particles read, flip, and move synchronously; the new particles
+are then added to the endpoints and first act on the next step.  The
+reservoirs do not reset tape symbols.  Other reservoir conventions define
+different open models and need not have the stationary state derived here.
+
+With time subscripts suppressed on the right-hand sides, the boundary rules
+are
+\begin{align}
+n_{t+1}(1)&=(1-V_2)n_2+b_t^{\mathrm L},\\
+n_{t+1}(L)&=V_{L-1}n_{L-1}+b_t^{\mathrm R},
+\end{align}
+with Eq.~\eqref{eq:exact-number-update} in the interior and
+$V_{t+1}(x)=V_x\oplus I_x$ everywhere.  Injection into an already arriving
+stack adds mass without creating a second stack.  In particular,
+\begin{equation}
+N_{t+1}-N_t=b_t^{\mathrm L}+b_t^{\mathrm R}
+ -(1-V_1)n_1-V_Ln_L.
+\label{eq:open-mass-balance}
+\end{equation}
+
+\paragraph{A finite Markov problem for tape and support.}
+Define the outgoing stack indicators
+\begin{equation}
+r_x=I_xV_x,\qquad \ell_x=I_x(1-V_x).
+\end{equation}
+The closed support dynamics are
+\begin{align}
+I_{t+1}(1)&=b_t^{\mathrm L}\lor\ell_2,\\
+I_{t+1}(x)&=r_{x-1}\lor\ell_{x+1},\quad 2\leq x\leq L-1,\\
+I_{t+1}(L)&=r_{L-1}\lor b_t^{\mathrm R}.
+\end{align}
+Thus $s=(V,I)$ has $4^L$ possible values, although the full state $(V,n)$
+has unbounded integer masses.  Let $F_{bc}(s)$ denote the Boolean update
+with boundary choices $(b,c)$ and let
+\begin{equation}
+w_{bc}=\alpha^b(1-\alpha)^{1-b}\beta^c(1-\beta)^{1-c}.
+\end{equation}
+The column-stochastic transition matrix and stationary equation are
+\begin{equation}
+P(s'\mid s)=\sum_{b,c=0}^1w_{bc}
+ \mathbf{1}_{\{s'=F_{bc}(s)\}},\qquad
+P\pi=\pi,\qquad \sum_s\pi(s)=1.
+\label{eq:boundary-markov}
+\end{equation}
+Different injection events can produce the same Boolean successor, so their
+probabilities must be added.  This is an exact finite-size formulation;
+its exponential state count is the practical limitation.
+
+\paragraph{Why the finite open system has a unique steady state.}
+There is a useful decreasing potential when injection is switched off.
+Set
+\begin{equation}
+h_x=x(L+1-x),\qquad a_x=L+1-2x,
+\end{equation}
+and define
+\begin{equation}
+\mathcal Q(V,I)=\sum_{x=1}^L h_x I_x
+ +\sum_{x=1}^L\bigl[a_xV_x-\min(0,a_x)\bigr].
+\end{equation}
+Let $C_x=r_{x-1}\ell_{x+1}$, setting the incoming indicators outside the
+interval to zero.  With no injection, direct substitution gives
+\begin{equation}
+\boxed{\mathcal Q_{t+1}-\mathcal Q_t
+ =-K_t-\sum_{x=1}^L h_x C_x.}
+\label{eq:clearing-potential}
+\end{equation}
+Indeed, a departure in direction $\sigma_x=2V_x-1$ changes its $h$ weight
+by $h_{x+\sigma_x}-h_x=-1+a_x\sigma_x$, while the tape contribution
+changes by $-a_x\sigma_x$.  Coalescence removes one additional $h_x$
+weight at each double arrival.  Absorption is included by $h_0=h_{L+1}=0$.
+Since
+\begin{equation}
+0\leq\mathcal Q\leq B_L,
+\qquad
+B_L=\frac{L(L+1)(L+2)}{6}+\left\lfloor\frac{L^2}{2}\right\rfloor,
+\end{equation}
+every configuration empties within $B_L$ consecutive steps without
+injection, independently of its stack masses.
+
+Emptying does not reset the tape, but a common empty configuration is
+accessible.  Inject one particle from the left into an empty interval and
+wait for it to exit.  If the first zero is at $j$, the particle travels to
+$j$, turns, and exits on the left; its final tape has its first $j$ symbols
+equal to one and its remaining symbols unchanged.  If all symbols were one,
+it exits on the right and leaves an all-zero tape.  At most $L+1$ such
+isolated injections therefore reach the empty all-zero configuration,
+denoted $s_\star$.  Each excursion takes at most $2L-1$ moves.
+
+For $0<\alpha,\beta<1$, all the required injection and no-injection events
+have positive probability.  Every Boolean state can reach $s_\star$, which
+also has a no-injection self-loop.  Hence there is exactly one recurrent
+class, it is aperiodic, and $\pi$ is unique.  This argument does not require
+irreducibility on all $4^L$ states.
+
+The same construction reaches $(V,n)=(0,0)$ in a uniformly bounded number
+of steps, with a positive probability bounded below for fixed
+$(L,\alpha,\beta)$, regardless of the initial masses.  Repeated blocks thus
+give a geometric bound on the reset time.  Since at most two particles
+enter per step, the full process also has a unique stationary distribution
+with finite mass moments.  The bounds deteriorate with $L$ and do not
+establish a thermodynamic-limit steady state.
+
+\paragraph{Exact stationary identities and the first closure problem.}
+Write $\langle\cdot\rangle$ for stationary expectation and
+$\kappa_x=\langle I_x\rangle$ for the stack density.  Stationarity of the
+tape gives a particularly simple identity:
+\begin{equation}
+0=\langle V_{t+1}(x)-V_t(x)\rangle
+ =\langle I_x(1-2V_x)\rangle,
+\qquad
+\boxed{\langle r_x\rangle=\langle\ell_x\rangle=\frac{\kappa_x}{2}.}
+\label{eq:stationary-rotor-balance}
+\end{equation}
+Thus the symbol seen at an occupied site is unbiased in the stationary
+measure.  This does not imply $\langle V_x\rangle=1/2$: the tape at empty
+sites can be strongly polarized.
+
+Using $a\lor b=a+b-ab$, the bulk support balance becomes
+\begin{equation}
+\boxed{
+\frac{\kappa_{x-1}-2\kappa_x+\kappa_{x+1}}{2}
+ =c_x,\qquad
+c_x=\langle r_{x-1}\ell_{x+1}\rangle\geq0.
+}
+\label{eq:stationary-coalescence}
+\end{equation}
+The mean stack profile is therefore discretely convex.  Its rightward
+current is $j_{x+1/2}=(\kappa_x-\kappa_{x+1})/2$ and satisfies
+$j_{x-1/2}-j_{x+1/2}=c_x$.  Independence of each fresh boundary draw gives
+the exact boundary conditions
+\begin{equation}
+\kappa_1=\alpha+(1-\alpha)\frac{\kappa_2}{2},\qquad
+\kappa_L=\beta+(1-\beta)\frac{\kappa_{L-1}}{2}.
+\label{eq:stationary-support-boundaries}
+\end{equation}
+For $L=2$, these close without any approximation:
+\begin{equation}
+\kappa_1=\frac{2(2\alpha+\beta-\alpha\beta)}
+ {3+\alpha+\beta-\alpha\beta},\qquad
+\kappa_2=\frac{2(\alpha+2\beta-\alpha\beta)}
+ {3+\alpha+\beta-\alpha\beta}.
+\end{equation}
+For larger systems, the unknown collision correlations $c_x$ prevent a
+one-point closure.  The replacement $c_x\approx\kappa_{x-1}\kappa_{x+1}/4$
+is a possible mean-field approximation, not an exact consequence of the
+rotor balance.
+
+Mass has a different balance: its stationary current $J$ is constant
+across all bonds, with
+\begin{align}
+J&=\langle V_xn_x-(1-V_{x+1})n_{x+1}\rangle,\\
+J&=\alpha-\langle(1-V_1)n_1\rangle
+ =\langle V_Ln_L\rangle-\beta.
+\label{eq:stationary-mass-current}
+\end{align}
+Equal left and right \emph{stack} departure rates do not imply equal
+\emph{mass} departure rates: stack size can correlate with direction.
+
+\paragraph{Exact finite-size mass observables without a mass cutoff.}
+There is nevertheless a finite linear closure for first mass moments
+conditioned on the entire Boolean state.  Let $T(V)$ route each column $x$
+to row $x+2V_x-1$, deleting it if the destination lies outside the interval.
+For injection event $e=(b,c)$, set $g_e=b\,\mathbf e_1+c\,\mathbf e_L$.
+The full mass update is $n'=T(V)n+g_e$.  Define the unnormalized vector
+\begin{equation}
+m_x(s)=\mathbb E\!\left[n_x\mathbf{1}_{\{(V,I)=s\}}\right].
+\end{equation}
+After solving Eq.~\eqref{eq:boundary-markov}, stationarity requires
+\begin{equation}
+m(s')=\sum_{s,e}w_e\mathbf{1}_{\{s'=F_e(s)\}}
+ \bigl[T(V(s))m(s)+g_e\pi(s)\bigr].
+\label{eq:conditional-mass-closure}
+\end{equation}
+This is a linear system for at most $L4^L$ unknowns, with $m_x(s)=0$ if
+$I_x(s)=0$.  Its homogeneous evolution transports only previously present
+mass, which is erased by a sufficiently long no-injection block.  On these
+support-compatible coordinates its spectral radius is less than one, so
+the linear system has a unique solution.  Then
+\begin{equation}
+\rho_x=\sum_s m_x(s),\qquad
+J=\sum_s\left[V_x(s)m_x(s)
+ -(1-V_{x+1}(s))m_{x+1}(s)\right]
+\end{equation}
+give the exact finite-size mass density and current.  This bypasses a
+cutoff on stack size, although the Boolean state count remains exponential.
+
+\paragraph{A controlled solution for rare injection.}
+Set $\alpha=\epsilon a$, $\beta=\epsilon b$, with fixed $a,b>0$, and take
+$\epsilon\to0$ at fixed $L$.  Injections are then separated by isolated
+single-particle excursions with probability tending to one.  A naive
+expansion about a fixed empty tape would fail: at zero injection, all
+$2^L$ empty tapes are absorbing.  The drive selects a measure on this
+degenerate set, which must be determined first.
+
+The recurrent empty tapes under isolated boundary injections are
+\begin{equation}
+E_k=\underbrace{11\cdots1}_{k}
+     \underbrace{00\cdots0}_{L-k},\qquad k=0,\ldots,L.
+\end{equation}
+A left injection maps $E_k$ to $E_{k+1}$, and a right injection maps it
+to $E_{k-1}$, with indices modulo $L+1$.  This set is closed, and the
+left-injection construction above takes every other empty tape into it.
+On the slow time scale, the interface index has generator
+\begin{equation}
+(\mathcal G f)(k)=a[f(k+1)-f(k)]+b[f(k-1)-f(k)].
+\end{equation}
+Its stationary distribution is uniform, even when $a\neq b$.  Because the
+waiting time for injection is independent of $k$, the physical-time
+stationary measure has the same leading weights:
+\begin{equation}
+\boxed{\pi(V=E_k,I=0)=\frac{1}{L+1}+O(\epsilon).}
+\label{eq:dilute-vacuum-measure}
+\end{equation}
+The tape is consequently correlated and polarized even at arbitrarily
+weak drive.  For example,
+\begin{align}
+\langle V_x\rangle&=\frac{L+1-x}{L+1}+O(\epsilon),\\
+\operatorname{Cov}(V_x,V_y)
+ &=\frac{x(L+1-y)}{(L+1)^2}+O(\epsilon),\qquad x\leq y.
+\end{align}
+
+The same excursion picture gives the particle densities.  Averaged
+uniformly over $E_k$, a left-injected particle visits site $x$ an average
+$2(L+1-x)/(L+1)$ times before absorption.  A right-injected particle has
+mean visit count $2x/(L+1)$.  Multiplying by the injection rates yields
+\begin{equation}
+\boxed{
+\rho_x=\kappa_x+O(\epsilon^2)
+ =\frac{2\bigl[\alpha(L+1-x)+\beta x\bigr]}{L+1}
+  +O(\epsilon^2).
+}
+\label{eq:dilute-density}
+\end{equation}
+The mean residence time of an isolated injected particle is $L$ steps,
+and hence $\langle N\rangle=L(\alpha+\beta)+O(\epsilon^2)$.
+A left-injected particle exits on the right only from $E_L$; a
+right-injected particle exits on the left only from $E_0$.  Therefore
+\begin{equation}
+\boxed{J=\frac{\alpha-\beta}{L+1}+O(\epsilon^2).}
+\label{eq:dilute-current}
+\end{equation}
+These are fixed-$L$ asymptotic statements.  The coefficients hidden in the
+errors can grow with $L$; in particular, overlap becomes relevant when the
+injection rate times the excursion duration is no longer small.  The
+$1/(L+1)$ conductance is an exact leading dilute-limit result, not yet a
+proof of diffusive transport at finite density.
+
+\paragraph{A matrix-product starting point and the remaining problem.}
+The leading empty-tape distribution already has an exact bond-dimension-two
+matrix-product representation.  In the physical basis $(V,I)$, take
+\begin{equation}
+A_{(1,0)}=\begin{pmatrix}1&0\\0&0\end{pmatrix},\qquad
+A_{(0,0)}=\begin{pmatrix}0&1\\0&1\end{pmatrix},\qquad
+A_{(v,1)}=0,
+\end{equation}
+with $\langle l|=(1,0)$ and $|r\rangle=(1,1)^{\mathsf T}$.  Then
+\begin{equation}
+\pi^{(0)}(s)=\frac{1}{L+1}
+ \langle l|A_{(V_1,I_1)}\cdots A_{(V_L,I_L)}|r\rangle
+\end{equation}
+assigns unit unnormalized weight precisely to the $L+1$ tapes $E_k$ with
+empty support.  This supplies an explicit starting point for a perturbative
+matrix-product calculation rather than an unspecified ansatz.
+
+At nonzero density, excursions overlap, stacks merge, and tape memory
+couples successive events.  A next step is to calculate the
+$O(\epsilon^2)$ collision corrections using two injections, including both
+same-boundary and opposite-boundary events.  In parallel, the finite-size
+stationary vectors from Eq.~\eqref{eq:boundary-markov} can test whether a
+small matrix-product representation survives at finite drive.  An ansatz
+must satisfy the actual local update and reservoir equations; no fixed
+bond dimension or Rule-54 cancellation algebra has been established for
+this model.  Mass observables can then be obtained from
+Eq.~\eqref{eq:conditional-mass-closure} even if the full mass distribution
+is not explicitly known.
+
+\paragraph{Checks on the calculation.}
+The no-injection potential identity was verified on all $4^L$ Boolean
+configurations for $L=2,\ldots,8$.  Their maximal clearing times were
+$3,7,12,18,26,37,47$ steps, respectively, all below $B_L$.
+The isolated-injection tape maps were checked for every empty tape through
+$L=10$.  Numerical stationary solutions of the exact finite transition
+matrix at $(\alpha,\beta)=(0.37,0.61)$ satisfied the rotor, boundary, and
+coalescence identities to better than $10^{-11}$ for $L=2,\ldots,7$;
+the conditional mass equations gave spatially constant mass currents
+through $L=6$.  At $L=3$, with $(a,b)=(0.37,0.61)$ and
+$\epsilon=0.02,0.01,0.005$, the discrepancies in
+Eqs.~\eqref{eq:dilute-density} and~\eqref{eq:dilute-current} scaled as
+$O(\epsilon^2)$.  These checks support the derivations but do not replace
+an arbitrary-density solution.
+
+\clearpage
+\begingroup
+\raggedright
+\bibliographystyle{unsrtnat}
+\bibliography{tm-stat-mech}
+\endgroup
+
+\end{document}
