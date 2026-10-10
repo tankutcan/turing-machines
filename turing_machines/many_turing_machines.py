@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Simulate random Turing-machine agents on a shared random tape.
 
 By default all agents are identical.  ``--machine-ensemble independent``

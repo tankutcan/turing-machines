@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two-state cooperation graph</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f2f5f7; color: #172b3a; font: 15px/1.5 system-ui, sans-serif; }
+  main { max-width: 1400px; margin: auto; padding: 32px; }
+  h1 { font-size: 32px; margin: 0 0 8px; letter-spacing: -1px; }
+  h2 { font-size: 19px; margin: 0 0 12px; }
+  p { margin: 8px 0 16px; }
+  a { color: #176b83; } .muted { color: #596e7e; }
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
+  .stat { background: white; border: 1px solid #dce5ea; border-radius: 10px; padding: 14px 22px; flex: 1; min-width: 160px; }
+  .stat b { display: block; font-size: 26px; } .stat span { font-size: 13px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  section { background: white; border: 1px solid #dce5ea; border-radius: 12px; padding: 20px; }
+  canvas { width: 100%; display: block; cursor: crosshair; }
+  .controls { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  input[type=number] { width: 74px; } input, select { padding: 5px; font: inherit; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; margin: 10px 0; }
+  .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; }
+  #details { margin-top: 20px; } table { border-collapse: collapse; min-width: 320px; }
+  td, th { padding: 5px 18px 5px 0; text-align: left; border-bottom: 1px solid #e4ebef; }
+  code { background: #eef3f6; padding: 2px 5px; } .detailgrid { display: flex; gap: 40px; flex-wrap: wrap; }
+  #pair { min-height: 48px; } footer { margin: 24px 0; font-size: 13px; }
+  @media(max-width: 850px) { .grid { grid-template-columns: 1fr; } main { padding: 16px; } }
+</style>
+<main>
+  <div class="muted">EXHAUSTIVE ENSEMBLE · n = 2</div>
+  <h1>Who cooperates with whom?</h1>
+  <p>Each arrow points from a machine to an opponent it cooperates with. Mutual cooperation gives two arrows;
+    mutual defection gives none. Every distinct pair plays once.</p>
+  <div id="stats" class="stats"></div>
+  <div class="grid">
+    <section>
+      <h2>Directed graph</h2>
+      <div class="controls">
+        <label>Machine <input id="selected" type="number" min="0" max="255" value="85"></label>
+        <label><input id="allEdges" type="checkbox"> Show every edge</label>
+      </div>
+      <canvas id="network" width="720" height="640" aria-label="Directed cooperation graph, select a node to inspect its edges"></canvas>
+      <div class="legend"><span><i class="swatch" style="background:#1685a0"></i>Selected → opponent</span>
+        <span><i class="swatch" style="background:#db8040"></i>Opponent → selected</span>
+        <span><i class="swatch" style="background:#8b59ab"></i>Mutual cooperation</span></div>
+      <p class="muted">Click a node to inspect it. All 256 nodes lie on a circle, ordered clockwise by increasing
+        out-degree, then in-degree, then ID. Positions are for display; they do not measure similarity.</p>
+    </section>
+    <section>
+      <h2>Every pair, at a glance</h2>
+      <div class="controls"><label>Order <select id="order"><option value="degree">Out-degree, then in-degree</option>
+        <option value="id">Machine ID</option><option value="scc">Strongly connected component</option>
+        <option value="payoff">Highest payoff first</option></select></label></div>
+      <canvas id="matrix" width="640" height="640" aria-label="All pair outcomes; rows are source machines and columns are targets"></canvas>
+      <div class="legend"><span><i class="swatch" style="background:#edf1f5"></i>DD</span>
+        <span><i class="swatch" style="background:#1685a0"></i>CD: row → column</span>
+        <span><i class="swatch" style="background:#db8040"></i>DC: column → row</span>
+        <span><i class="swatch" style="background:#8b59ab"></i>CC: both arrows</span></div>
+      <p id="pair" class="muted" aria-live="polite">Hover over a cell to inspect its game. Click to select the row machine. The diagonal shows self-play, excluded from graph edges.</p>
+    </section>
+  </div>
+  <section id="details" aria-live="polite"></section>
+  <section style="margin-top:20px">
+    <h2>Payoff ranking</h2>
+    <p>Each machine plays all 255 other machines once. Payoffs: CC = 3, DD = 1, DC = 5, CD = 0,
+      with the focal machine's action first. The mean is its expected payoff against a uniformly sampled other machine.</p>
+    <p id="payoffSummary"></p>
+    <div style="overflow-x:auto"><table><thead><tr><th>Rank</th><th>Total</th><th>Mean</th><th>Machine IDs</th></tr></thead>
+      <tbody id="leaders"></tbody></table></div>
+    <p class="muted">Top five distinct scores; tied machines share a rank. Click an ID to inspect its rules.</p>
+    <p><a href="payoff_ranking.csv">Full ranking CSV</a> · <a href="best_machines.csv">All top-scoring machines</a></p>
+  </section>
+  <section style="margin-top:20px">
+    <h2>Payoff distribution and responses to constant strategies</h2>
+    <p id="distributionSummary"></p>
+    <img src="payoff_distribution.png" alt="Exact payoff distribution and cumulative distribution across all 256 machines" style="width:100%">
+    <p>The 34 always-defectors output D on every eight-bit opponent code; the 34 always-cooperators output C.
+      No two-state machine defects against all of the former and cooperates with all of the latter.</p>
+    <p>The closest is <a href="#details" id="inspectBestResponse">machine 7</a>: it defects against 24 of 34 always-defectors
+      and cooperates with 30 of 34 always-cooperators (54 of 68 correct). Its mean payoff over the full ensemble is 1.980392.</p>
+    <img src="constant_strategy_responses.png" alt="Responses of every machine to always-defectors and always-cooperators; no machine reaches the perfect response" style="width:100%;max-width:780px">
+    <p>A narrower rule-based definition gives a different answer. There are 16 tables with W identically 0 and 16 with W
+      identically 1. Machines <b>7, 39, 88, 216</b> distinguish these two smaller classes perfectly. The broader behavioral
+      classes also contain programs with mixed W entries whose final outputs are nevertheless constant.</p>
+    <p>For example, machine 39 simply outputs the opponent's penultimate code bit, W(2,1). That single rule bit
+      perfectly identifies the constant-W tables, but it need not determine a program's final behavior.</p>
+    <p><a href="payoff_distribution.pdf">Payoff distribution PDF</a> · <a href="payoff_distribution.csv">Exact distribution CSV</a> ·
+      <a href="constant_strategy_responses.pdf">Strategy responses PDF</a> · <a href="constant_strategy_responses.csv">All response counts</a></p>
+  </section>
+  <section style="margin-top:20px">
+    <h2>Model and archive</h2>
+    <p>All 4⁴ = 256 labeled tables with two states and two read symbols. Each table entry stores an output bit W and
+      a next-state bit S−1; motion is fixed rightward. Entry order is (1,0), (1,1), (2,0), (2,1), with W then S−1.
+      Machine IDs read cell 0 as the least significant bit. IDs differ from the full Turing-machine census.</p>
+    <p>Both readers reset to state 1, scan the other program from cell 0 through cell 7 without changing it, and
+      choose the eighth emitted bit: 1 = cooperate, 0 = defect. A machine's own table stays fixed. The archive
+      includes 32,640 distinct-pair games and 256 games between identical copies. Main graph statistics exclude self-loops.</p>
+    <p id="structure"></p>
+    <p><a href="cooperation.graphml">GraphML</a> · <a href="edges.csv">Directed edges</a> ·
+      <a href="machines.csv">Machines</a> · <a href="games.csv">All games</a> ·
+      <a href="adjacency.npz">NumPy matrices</a> · <a href="summary.json">Summary & provenance</a> ·
+      <a href="cooperation_graph.pdf">Figure PDF</a> · <a href="cooperation_graph.png">Figure PNG</a></p>
+  </section>
+  <footer>This archive works offline. Graph topology depends on the stated code encoding and decision convention.</footer>
+</main>
+<script>
+const data = __GRAPH_DATA__;
+const nodes=data.nodes, A=data.adjacency, s=data.summary, n=nodes.length;
+const $=id=>document.getElementById(id), fmt=x=>x.toLocaleString();
+const colors=['#edf1f5','#db8040','#1685a0','#8b59ab'];
+let selected=85, order=[];
+$('stats').innerHTML=[['Machines',n],['Directed edges',s.directed_edges_excluding_self_loops],
+  ['Mutual cooperation',s.distinct_pair_outcomes.CC],['Mutual defection',s.distinct_pair_outcomes.DD],
+  ['One-way cooperation',s.distinct_pair_outcomes.CD+s.distinct_pair_outcomes.DC]]
+  .map(([label,value])=>`<div class="stat"><b>${fmt(value)}</b><span>${label}</span></div>`).join('');
+const sizes=s.strongly_connected_components.map(c=>c.length), hist={};
+const scoreGroups=[...new Set(nodes.map(d=>d.total_payoff))].sort((a,b)=>b-a).slice(0,5);
+$('leaders').innerHTML=scoreGroups.map(score=>{const group=nodes.filter(d=>d.total_payoff===score),d=group[0];
+  return `<tr><td>${d.payoff_rank}</td><td>${score}</td><td>${d.mean_payoff.toFixed(6)}</td><td>`+
+    group.map(x=>`<a href="#details" data-machine="${x.machine_id}">${x.machine_id}</a>`).join(', ')+`</td></tr>`;}).join('');
+$('leaders').addEventListener('click',event=>{const id=event.target.dataset.machine;if(id!==undefined)select(Number(id));});
+$('payoffSummary').textContent=`${s.payoffs.winner_count} machines tie for first with ${s.payoffs.maximum_total_payoff} points, `+
+  `averaging ${s.payoffs.maximum_mean_payoff.toFixed(6)} per game. All 34 defect against every opponent in this ensemble. `+
+  `They face 128 cooperators and 127 defectors each. If retained alone, they all mutually defect and earn 1 per game.`;
+$('distributionSummary').textContent=`There are ${s.payoffs.distribution.length} distinct mean payoffs, ranging from `+
+  `${s.payoffs.minimum_mean_payoff.toFixed(6)} to ${s.payoffs.maximum_mean_payoff.toFixed(6)}. Across machines, the mean is `+
+  `${s.payoffs.population_mean.toFixed(6)}, the median ${s.payoffs.population_median.toFixed(6)}, and the standard deviation `+
+  `${s.payoffs.population_standard_deviation.toFixed(6)}. Each labeled machine has equal weight; self-play is excluded from payoffs.`;
+$('inspectBestResponse').addEventListener('click',()=>select(s.constant_strategy_responses.best_match_ids[0]));
+sizes.forEach(x=>hist[x]=(hist[x]||0)+1);
+$('structure').textContent=`${sizes.length} strongly connected components (${Object.entries(hist).map(([size,count])=>`${count} of size ${size}`).join(', ')}). `+
+  `${s.weak_component_sizes.length} weakly connected component(s). ${fmt(s.directed_three_cycles)} directed three-cycles. `+
+  `${s.zero_out_degree_nodes.length} machines have no outgoing edges; ${s.zero_in_degree_nodes.length} have no incoming edges.`;
+const circleOrder=Array.from({length:n},(_,i)=>i).sort((i,j)=>nodes[i].out_degree-nodes[j].out_degree||nodes[i].in_degree-nodes[j].in_degree||i-j);
+const positions=Array(n);
+circleOrder.forEach((i,k)=>{const angle=2*Math.PI*k/n-Math.PI/2;
+  positions[i]={x:360+275*Math.cos(angle),y:320+275*Math.sin(angle)};});
+function arrow(ctx,i,j,color,alpha=1,width=1) {
+  const p=positions[i],q=positions[j],dx=q.x-p.x,dy=q.y-p.y,L=Math.hypot(dx,dy);
+  if(L<1)return;
+  const ux=dx/L,uy=dy/L,offset=A[j][i]?1.8:0;
+  const x=q.x-ux*6-uy*offset,y=q.y-uy*6+ux*offset;
+  ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=width;
+  ctx.beginPath();ctx.moveTo(p.x+ux*5-uy*offset,p.y+uy*5+ux*offset);ctx.lineTo(x,y);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-ux*5-uy*2.5,y-uy*5+ux*2.5);
+  ctx.lineTo(x-ux*5+uy*2.5,y-uy*5-ux*2.5);ctx.closePath();ctx.fill();
+}
+function network() {
+  const ctx=$('network').getContext('2d');ctx.clearRect(0,0,720,640);ctx.globalAlpha=1;
+  ctx.font='12px system-ui';ctx.fillStyle='#596e7e';
+  ctx.fillText('Out-degree increases clockwise from the top',205,24);
+  if($('allEdges').checked) for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(A[i][j])arrow(ctx,i,j,'#637e90',0.035,0.6);
+  for(let j=0;j<n;j++) {
+    const mutual=A[selected][j]&&A[j][selected];
+    if(A[selected][j])arrow(ctx,selected,j,mutual?'#8b59ab':'#1685a0',0.65);
+    if(A[j][selected])arrow(ctx,j,selected,mutual?'#8b59ab':'#db8040',0.65);
+  }
+  ctx.globalAlpha=1;
+  nodes.forEach((d,i)=>{const p=positions[i];ctx.fillStyle=i===selected?'#132f43':'#9eb2c0';
+    ctx.beginPath();ctx.arc(p.x,p.y,i===selected?7:3.4,0,2*Math.PI);ctx.fill();});
+  const p=positions[selected];ctx.fillStyle='#132f43';ctx.font='bold 14px system-ui';ctx.fillText(selected,p.x+10,p.y-10);
+}
+function matrix() {
+  order=Array.from({length:n},(_,i)=>i);
+  const mode=$('order').value;
+  if(mode==='degree')order.sort((i,j)=>nodes[i].out_degree-nodes[j].out_degree||nodes[i].in_degree-nodes[j].in_degree||i-j);
+  if(mode==='scc')order.sort((i,j)=>nodes[i].scc-nodes[j].scc||i-j);
+  if(mode==='payoff')order.sort((i,j)=>nodes[j].total_payoff-nodes[i].total_payoff||i-j);
+  const ctx=$('matrix').getContext('2d'),cell=2.5;
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++) {
+    const i=order[r],j=order[c],code=i===j?3*nodes[i].self_cooperates:2*A[i][j]+A[j][i];
+    ctx.fillStyle=colors[code];ctx.fillRect(c*cell,r*cell,cell,cell);
+  }
+  const k=order.indexOf(selected);ctx.strokeStyle='#142f40';ctx.lineWidth=1;
+  ctx.strokeRect(0,k*cell,640,cell);ctx.strokeRect(k*cell,0,cell,640);
+}
+function details() {
+  const d=nodes[selected];
+  $('details').innerHTML=`<h2>Machine ${selected} · <code>${d.program}</code></h2><div class="detailgrid"><div>
+    <p>Payoff rank <b>${d.payoff_rank}</b> · total <b>${d.total_payoff}</b> · mean <b>${d.mean_payoff.toFixed(6)}</b>.<br>
+    Outcomes: CC ${d.games_CC}, CD ${d.games_CD}, DC ${d.games_DC}, DD ${d.games_DD}.<br>
+    Against always-defectors: <b>${d.defects_against_always_defectors}/34</b> D.<br>
+    Against always-cooperators: <b>${d.cooperates_with_always_cooperators}/34</b> C.<br>
+    Cooperates with <b>${d.out_degree}</b> other machines.<br>Receives cooperation from <b>${d.in_degree}</b>.<br>
+    Has <b>${d.mutual_neighbors}</b> mutual-cooperation neighbors.<br>Self-play: <b>${d.self_cooperates?'CC':'DD'}</b>.<br>
+    Strong component ${d.scc}: <b>${s.strongly_connected_components[d.scc].length}</b> machines.</p></div>
+    <table><thead><tr><th>State</th><th>Read</th><th>Output</th><th>Next state</th></tr></thead><tbody>
+    ${d.rules.map(([w,q],k)=>`<tr><td>${1+Math.floor(k/2)}</td><td>${k%2}</td><td>${w}</td><td>${q}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+function select(i) {selected=i;$('selected').value=i;network();matrix();details();}
+$('selected').addEventListener('change',()=>{const i=Number($('selected').value);if(Number.isInteger(i)&&i>=0&&i<n)select(i);});
+$('allEdges').addEventListener('change',network);$('order').addEventListener('change',matrix);
+function coord(event,canvas) {const r=canvas.getBoundingClientRect();return {x:(event.clientX-r.left)*canvas.width/r.width,y:(event.clientY-r.top)*canvas.height/r.height};}
+$('network').addEventListener('click',event=>{const p=coord(event,$('network'));let best=0,distance=Infinity;
+  positions.forEach((q,i)=>{const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<distance){distance=d;best=i;}});if(distance<20)select(best);});
+function pair(event) {const p=coord(event,$('matrix'));return [order[Math.min(255,Math.max(0,Math.floor(p.y/2.5)))],order[Math.min(255,Math.max(0,Math.floor(p.x/2.5)))]];}
+$('matrix').addEventListener('mousemove',event=>{const [i,j]=pair(event),a=i===j?nodes[i].self_cooperates:A[i][j],b=i===j?a:A[j][i];
+  $('pair').textContent=`Row ${i} ${a?'cooperates':'defects'}; column ${j} ${b?'cooperates':'defects'}. `+
+    (i===j?'Self-play; no graph self-loop.':a&&b?'Two directed edges.':a?`${i} → ${j}.`:b?`${j} → ${i}.`:'No edges.');});
+$('matrix').addEventListener('click',event=>select(pair(event)[0]));
+select(selected);
+</script>
+</html>

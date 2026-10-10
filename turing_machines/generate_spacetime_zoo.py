@@ -24,7 +24,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from many_turing_machines import simulate
+from .many_turing_machines import simulate
 
 
 def labeled_title(seed: int, args: argparse.Namespace, compact: bool = False) -> str:

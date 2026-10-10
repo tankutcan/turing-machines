@@ -23,8 +23,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from generate_spacetime_zoo import contact_thumbnail, spacetime_rgb
-from many_turing_machines import simulate
+from .generate_spacetime_zoo import contact_thumbnail, spacetime_rgb
+from .many_turing_machines import simulate
 
 
 def one_state_tm(machine_id: int) -> dict[int, dict[int, list[int]]]:
@@ -328,5 +328,9 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
-if __name__ == "__main__":
+def main() -> None:
     generate(parse_args())
+
+
+if __name__ == "__main__":
+    main()

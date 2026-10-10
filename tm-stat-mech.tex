@@ -132,7 +132,7 @@ This is the most general formulation, and illustrates the fact that to define a 
 
 
 
-\section{Langton's Ant}
+\subsection{One-State Turing Machine: Langton's Ant}
 \label{sec:langton-ant}
 
 The first simple example we start with is Langton's ant, also called a turmite (presumably a portmanteau of turing and mite). Typically these are studied on a 2D grid, but I consider them on a one-dimensional tape. This model belongs to the class of ${\rm TM}_{1}(2)$, since there is only a single state and the behavior ultimately depends only on the current state of the tape. The rules are:
@@ -186,7 +186,7 @@ n_{t+1}(x) - n_{t}(x)  & = J_{R}(x-1, x) + J_{L}(x+1, x) = J_{R}(x-1, x) - J_{R}
  which is the discrete version of the continuity equation. There is a different presentation of this in the appendix. 
  
  
-\subsection{Turmitic Solitons}
+\subsubsection{Turmitic Solitons}
 
 The simulations suggest looking for solitonic solutions which are ballistic. Let us assume that $n_{t}(x) = N \delta_{x 0}$ for a doubly infinite tape, and $V_{t}(x) = 1$ . Then
 
@@ -205,9 +205,23 @@ V_{t+2}(1) = 0, \quad n_{t+2}(2) = N, \quad n_{t+2}(1) = 0
  Another thing to notice: If all turmites occupy the same point, there is no mechanism for them to disperse. Therefore, unless the individual turmites never collide, the most likely asymptotic configuration is for all of the turmites to coalesce into one multi-cellular monster, moving as a soliton throughout the tape. 
 
 
-\section{Simplest Turing Machines}
+\subsection{Two-State Turing Machines: Multi-species turmites}
 
 Now let's try to extend the analysis of Langton's ant to simple 2 state turing machines. 
+
+
+
+\section{Multi-agent systems}
+
+The turing machines defined above are very elementary agents. They are stateful, and act deterministically on their environment, which is the tape. The action taken by the TM depends on the current bit $E_{t}$ and the current state $S_{t}$, which can be encapsulated via
+
+\begin{align}
+A_{t+1} \sim P(A| S_{t}, E_{t})
+\end{align}
+
+The actions just consist of transformations of $E_{t}$. Notice that while the TM is stateful, it is Markovian. The configuration $(E_{t}, S_{t})$ only depends on the previous time step. Is there a nontrivial yet tractable way to include memory in this system? For instance 
+
+
 
 
 \newpage
@@ -1164,6 +1178,541 @@ not establish thermalization.  Time runs upward; dark/light represents
 tape symbols and red/yellow represents single/multiple heads.}
 \label{fig:zoo-independent-periodic}
 \end{figure}
+
+\clearpage
+\section{Halting-time distributions: exact identities and a route to a solution}
+\label{sec:halting-distribution}
+
+This section concerns a single machine on its own tape, rather than the
+interacting gas.  The aim is to derive the distribution of halting times
+over random transition tables and initial tapes.  We distinguish exact
+finite-time results from a proposed program for the long-time tail; an
+approximately straight histogram on logarithmic axes is not by itself a
+proof of either an exponential or a power-law distribution.
+
+\subsection{Ensemble and halting-time convention}
+
+Use the functions $W_q(b)$, $M_q(b)$, and $S_q(b)$ of
+Section~\ref{sec:turing-machines}, with $n$ working states and two symbols.
+The head starts at $x_0=0$ in state $q_0=1$ on the unbounded tape
+$x\in\mathbb Z$.  Initially either $V_0(x)=0$ everywhere or the symbols
+are independent Bernoulli-$(1/2)$ variables.  The latter randomness is
+sampled once: revisiting a cell reads its current value, not a fresh coin.
+Introduce a halting state $H\notin[n]$ and define
+\begin{equation}
+T=\inf\{t\geq1:q_t=H\},\qquad
+f_n(t)=\Pr(T=t),\qquad F_n(t)=\Pr(T\leq t).
+\end{equation}
+Set $T=\infty$ if the machine never halts.  One step comprises reading,
+writing, moving, and changing state, including the operation entering
+$H$; thus the first possible halting time is $T=1$.
+
+Our sampling convention is uniform over labeled tables with exactly one
+halting entry.  Equivalently, first sample a non-halting parent table with
+independent uniform choices of $W_q(b)\in\{0,1\}$,
+$M_q(b)\in\{-1,+1\}$, and $S_q(b)\in[n]$.  Independently mark one
+entry $J\in[n]\times\{0,1\}$ uniformly, and replace only $S_J$ by $H$.
+There are $8n(4n)^{2n-1}$ resulting labeled tables: $2n$ choices of
+halting entry, four write/move choices there, and $4n$ choices at each
+other entry.  Unreachable states are allowed, and no symmetry quotient
+or connectivity conditioning is imposed.  The formulas below refer to
+this measure, not to independently assigning a halt target to every entry.
+
+In general $\sum_{t\geq1}f_n(t)<1$, with the remaining mass at infinity.
+A histogram normalized over runs that halt before a cutoff $t_{\max}$
+estimates $f_n(t)/F_n(t_{\max})$ for $t\leq t_{\max}$, not necessarily
+the distribution conditional on eventual halting.  In particular,
+survival to a cutoff on a random tape is not a non-halting certificate.
+
+\subsection{An exact reduction to discovery of transition entries}
+
+Run the non-halting parent on the chosen initial tape.  Write
+$\widetilde q_j$, $\widetilde x_j$, and $\widetilde V_j$ for its trajectory,
+and define
+\begin{equation}
+\mathcal E_t=
+\bigl\{(\widetilde q_j,\widetilde V_j(\widetilde x_j)):
+                  0\leq j<t\bigr\},\qquad
+K_t=|\mathcal E_t|,\qquad K_0=0.
+\end{equation}
+Thus $K_t$ counts distinct state/read-bit entries used in the first $t$
+operations, not distinct internal states or tape positions.
+
+\paragraph{Exact identity and proof.}
+For a fixed parent table and initial tape, the modified and parent
+trajectories agree until the first use of $J$.  At that operation the
+modified machine halts.  Therefore $T\leq t$ if and only if
+$J\in\mathcal E_t$.  Averaging the independent uniform mark, then the
+parent and tape, gives
+\begin{align}
+\boxed{F_n(t)=\frac{\mathbb E[K_t]}{2n},}\qquad
+\boxed{f_n(t)=\frac{\mathbb E[K_t-K_{t-1}]}{2n}.}
+\label{eq:halt-discovery}
+\end{align}
+The same proof works for either initial-tape ensemble.  Expectations here
+are over non-halting parents and their initial tapes; the parent is
+continued indefinitely even after a marked version would have halted.
+
+Since $K_t$ increases to a bounded random variable $K_\infty\leq2n$,
+\begin{equation}
+\Pr(T<\infty)=\frac{\mathbb E[K_\infty]}{2n},
+\label{eq:halt-total-mass}
+\end{equation}
+\begin{equation}
+\boxed{\Pr(t<T<\infty)
+ =\frac{\mathbb E[K_\infty-K_t]}{2n}.}
+\label{eq:halt-finite-tail}
+\end{equation}
+The finite halting tail is consequently the expected number of entries
+that will eventually be discovered but have not yet been discovered.
+It is not proportional to the number $2n-K_t$ of all unseen entries,
+some of which may remain inaccessible forever.  This also explains why
+an independent, constant halting hazard is not automatic: a previously
+used non-halting entry stays safe on every subsequent use.
+
+\subsection{First exact coefficients and numerical checks}
+
+The first operation always discovers an entry, so for either tape ensemble
+\begin{equation}
+f_n(1)=\frac{1}{2n}.
+\end{equation}
+For the random tape, the second operation reads an independent fair bit
+at a new site.  The parent's first next state is independently uniform
+on $[n]$.  Thus the second state/read pair equals the first with probability
+$1/(2n)$, and Eq.~\eqref{eq:halt-discovery} gives
+\begin{equation}
+f_n(2)=\frac{1}{2n}\left(1-\frac{1}{2n}\right)
+      =\frac{2n-1}{4n^2}
+      \qquad\text{(iid fair random tape)}.
+\label{eq:halt-second-random}
+\end{equation}
+On a blank tape both of these reads are zero, so the second pair repeats
+the first with probability $1/n$.  Hence
+\begin{equation}
+f_n(2)=\frac{n-1}{2n^2}
+      \qquad\text{(blank tape)}.
+\label{eq:halt-second-blank}
+\end{equation}
+These expressions are unconditional probabilities, including all sampled
+machines in the denominator.  For $n=4$ on a random tape they predict
+$f_4(1)=0.125$ and $f_4(2)=0.109375$.  The existing $10^6$-sample run
+(machine seed $0$, tape seed $1$, cutoff $10000$) gives $0.124794$ and
+$0.109275$.  The counts and configuration are recorded in
+\path{results/halt_times_4state_2symbol_random_tape/distribution.csv}
+and the adjacent \path{summary.json}.  This agreement is a numerical
+check of the derivation, not a proof of the later coefficients.
+
+\subsection{Exact enumeration by deferred sampling}
+
+A constructive extension is to explore weighted execution histories,
+revealing each random choice only when it is first needed.  This uses
+the principle of lazy sampling~\citep{metere2023lazy} and is related to
+probabilistic symbolic execution, which computes probabilities of
+execution paths~\citep{susag2022symbolic}.  These are methodological
+connections; those references do not solve the present TM ensemble.
+
+For direct exploration of the halting ensemble, retain the current head
+position and state, the current tape on visited sites, and the partially
+revealed rule table.  At any surviving history with $k$ distinct known
+non-halting entries, the unique halting entry is uniform among the
+$2n-k$ remaining entries.  The exact branching rules are:
+\begin{enumerate}
+\item On first reading an unvisited random-tape cell, branch over its
+two initial symbols with weights $1/2$.  For a blank tape its initial
+symbol is deterministically zero.  Visited cells retain their current
+values, including all previous writes.
+\item If the state/read pair is already known, execute its stored rule
+deterministically; do not resample it or give it another chance to halt.
+\item If the pair is new, halt with conditional probability $1/(2n-k)$.
+Otherwise branch over the $4n$ possible non-halting actions.  Each such
+action has conditional probability
+\begin{equation}
+\frac{2n-k-1}{(2n-k)\,4n},
+\end{equation}
+and is stored permanently.  The final write and move on a halting branch
+can be marginalized because they do not affect $T$.
+\end{enumerate}
+Multiplying these probabilities along branches and summing the weight
+absorbed at operation $t$ computes $f_n(t)$ exactly.  An induction on
+execution length establishes equivalence to sampling the whole table
+and initial tape in advance.  Every fixed horizon has finitely many
+branches and rational weights; the difficulty is their number, not an
+unresolved probability measure.
+
+Equivalent explored configurations may be merged if their distributions
+of all unrevealed choices also agree.  Translation and appropriate state
+relabelings can reduce duplication, provided branch multiplicities are
+preserved.  In contrast, keeping only $q_t$, the read bit, or $K_t$ does
+not generally close the dynamics: spatial tape memory determines which
+entry can be discovered next.  The exact enumerator proposed here has
+not yet been implemented.
+
+\subsection{An exactly solvable right-moving subclass}
+
+Fix a table satisfying $M_q(b)=+1$ for every entry, with a fair iid
+initial tape.  Every operation reads a fresh independent bit, and written
+symbols are never read again.  The working state alone is therefore an
+absorbing Markov chain.  With columns denoting the initial state, define
+\begin{equation}
+Q_{ij}=\frac12\sum_{b=0}^{1}\mathbf 1_{\{S_j(b)=i\}},\qquad
+h_j=\frac12\sum_{b=0}^{1}\mathbf 1_{\{S_j(b)=H\}}
+   =1-\sum_{i=1}^{n}Q_{ij}.
+\end{equation}
+Here $Q$ is substochastic and $e_1$ denotes unit mass in state $1$.
+For this fixed table the tape-averaged distribution and its generating
+function are exactly
+\begin{align}
+\Pr(T=t\mid\text{table})&=h^{\mathsf T}Q^{t-1}e_1,\\
+G(z)=\sum_{t\geq1}\Pr(T=t\mid\text{table})z^t
+ &=z h^{\mathsf T}(I-zQ)^{-1}e_1,\qquad |z|<1.
+\label{eq:halt-monotone-generating}
+\end{align}
+Closed non-halting classes can leave mass at infinity.  Matrix powers can
+give several modes and periodicity, not a single geometric law.  Averaging
+over right-moving tables solves that subclass, not the full ensemble,
+and supplies an exact benchmark for enumeration.
+
+\subsection{What remains to prove about the long-time tail}
+
+For general machines, tape revisits and overwriting invalidate the
+fresh-symbol assumption behind Eq.~\eqref{eq:halt-monotone-generating}.
+An internal-state transition graph alone cannot repair this loss of
+memory.  A plausible research program is:
+\begin{enumerate}
+\setlength{\itemsep}{0pt}
+\item Compute exact short-time coefficients and compare with Monte Carlo
+frequencies, keeping unconditional probabilities, cutoff conditioning,
+and certified non-halting mass distinct.
+\item Examine long-lived parent trajectories for delayed first uses of
+entries.  Identify recurring tape patterns, repeated excursions, or
+growing counters that can delay a new entry without making it permanently
+inaccessible.
+\item For each class, prove tape-pattern recurrences or a renewal
+description at regeneration points.  Retained variables must encode all
+relevant memory; return to the same internal state alone is insufficient.
+\item Combine the class probabilities and their first-discovery laws.
+A tail theorem for the full ensemble must also bound any unclassified
+remainder, rather than extrapolate the dominant sampled behavior.
+\end{enumerate}
+By Eq.~\eqref{eq:halt-finite-tail}, a proved bound
+$\mathbb E[K_\infty-K_t]\leq C e^{-\lambda t}$ would imply
+$\Pr(t<T<\infty)\leq C e^{-\lambda t}/(2n)$; fitting an exponential to a
+histogram does not establish this bound.  The discovery identities, first
+coefficients, and right-moving solution are exact.  Efficient enumeration
+and a general tail law remain proposed work, not established solutions.
+
+\clearpage
+\section{Mutual rewriting of two program tapes}
+\label{sec:mutual-rewriting}
+
+In the gases above the transition table is a fixed parameter and only the
+shared tape evolves.  Here the table itself becomes the dynamical variable.
+Two machines in ${\rm TM}_2(2)$ each store their own transition table on a
+short periodic tape, and each machine's head reads and writes the tape that
+encodes the \emph{other} machine.  The question is whether some tables are
+attracting or repelling under this mutual rewriting.  The setting is closer
+to algorithmic chemistry~\citep{fontana1991chemistry} than to the
+shared-tape gas, since the objects acted upon are themselves programs.
+
+Because the joint state space is finite, everything reported in this
+section is an exact enumeration over the stated initial conditions, not a
+sampled estimate.  The mechanism offered for the dominant attractors is an
+interpretation and is marked as such.
+
+\subsection{Model and encoding}
+
+A table in ${\rm TM}_2(2)$ has four entries $(q,b)$, each specifying a write
+bit, a move, and a next state, hence $3\times4=12$ bits and $2^{12}=4096$
+labeled tables.  Machine $a\in\{1,2\}$ carries a periodic tape
+$\tau^{(a)}_t\in\{0,1\}^{12}$ with cells indexed by $\mathbb Z_{12}$.  Entry
+$(q,b)$ has index $k=2(q-1)+b$ and occupies three consecutive cells,
+\begin{equation}
+\begin{aligned}
+W^{(a)}_t(q,b)&=\tau^{(a)}_t(3k),\\
+M^{(a)}_t(q,b)&=2\,\tau^{(a)}_t(3k+1)-1,\\
+S^{(a)}_t(q,b)&=1+\tau^{(a)}_t(3k+2),
+\end{aligned}
+\label{eq:program-tape-layout}
+\end{equation}
+so that $(W^{(a)}_t,M^{(a)}_t,S^{(a)}_t)$ are the functions $W_q(b)$,
+$M_q(b)$, $S_q(b)$ of Section~\ref{sec:turing-machines} for the table
+currently written on tape $a$.  A stored move bit $0$ means left and $1$
+means right; a stored state bit $0$ means state $1$.
+
+Write $\bar a$ for the other machine.  The head of machine $a$ sits at
+cell $x^{(a)}_t\in\mathbb Z_{12}$ of tape $\bar a$ in state
+$q^{(a)}_t\in\{1,2\}$.  With $b^{(a)}_t=\tau^{(\bar a)}_t(x^{(a)}_t)$
+the symbol it reads, one step is
+\begin{align}
+\tau^{(\bar a)}_{t+1}\bigl(x^{(a)}_t\bigr)
+ &= W^{(a)}_t\bigl(q^{(a)}_t,b^{(a)}_t\bigr),\\
+x^{(a)}_{t+1}
+ &= x^{(a)}_t+M^{(a)}_t\bigl(q^{(a)}_t,b^{(a)}_t\bigr)\pmod{12},\\
+q^{(a)}_{t+1}
+ &= S^{(a)}_t\bigl(q^{(a)}_t,b^{(a)}_t\bigr),
+\end{align}
+for $a=1,2$ simultaneously, all other cells being unchanged.  Both heads
+read the tapes at time $t$ and both use the tables decoded from the tapes
+at time $t$; the two writes then land together.  The heads write on
+different tapes, so no collision rule is needed.  A write can alter the very
+entry that the other machine uses at the same step; that machine still acts
+by the old entry and the new one takes effect at $t+1$.
+
+The joint state consists of the two tapes, the two head cells, and the
+two head states.  It takes
+\begin{equation}
+4096^2\cdot12^2\cdot2^2=9{,}663{,}676{,}416
+\end{equation}
+values and evolves deterministically, so every initial condition reaches
+a cycle after a finite transient.  The reference ensemble consists of all
+$4096^2=16{,}777{,}216$ ordered pairs of tables, with both heads started at
+cell $0$ in state $1$.  Exchanging the labels of the two machines is an
+exact symmetry of the dynamics.
+
+\subsection{Attractors and per-table observables}
+
+For each initial pair we compute the exact transient length and period of
+the joint state.  An \emph{attractor} is a cycle of the joint state.  A
+program is \emph{frozen} on an attractor if its tape is the same at every
+step of the cycle; the heads continue to move, so a frozen pair still has
+a nontrivial period set by head motion.  Initial pairs are sorted into
+five outcomes: both programs frozen at the all-$0$ tape; both frozen at
+the all-$1$ tape; both frozen at the tables they started with; any other
+frozen pair; and cycles on which at least one program keeps changing.  The
+third class is defined by comparing the final and initial tables, and does
+not distinguish a program that was never written to from one that was
+altered and restored during the transient.
+
+Three quantities are attached to each table $T$.  Let $\mathcal I$ be the
+set of initial pairs and $P_i$ the period reached from $i\in\mathcal I$.
+The \emph{late-time occupancy} is
+\begin{equation}
+\omega(T)=\frac{1}{2|\mathcal I|}\sum_{i\in\mathcal I}\frac{1}{P_i}
+ \sum_{t\in{\rm cycle}(i)}
+ \Bigl[\mathbf 1_{\{\tau^{(1)}_t=T\}}+\mathbf 1_{\{\tau^{(2)}_t=T\}}\Bigr],
+\qquad \sum_T\omega(T)=1,
+\end{equation}
+so a table that is neither favored nor disfavored has
+$\omega=1/4096$.  The \emph{survival fraction} $\sigma(T)$ is the fraction
+of the $8192$ combinations of initial pair and machine label in which $T$
+is present initially and that machine ends frozen at $T$.  The
+\emph{capture count} $c(T)$ is the number of such combinations in which
+$T$ was not present initially and the machine nevertheless ends frozen at
+$T$.  We call a table attracting when $\omega(T)\gg1/4096$ with large
+$c(T)$, and repelling when it has $\omega(T)=0$ or $\sigma(T)=0$.  These
+notions are relative to the uniform measure on initial pairs.
+
+\subsection{Exact structural statements}
+
+Two families of fixed pairs follow directly from
+Eq.~\eqref{eq:program-tape-layout}.
+
+\paragraph{Uniform tapes.}
+The all-$0$ tape decodes to $W\equiv0$, $M\equiv-1$, $S\equiv1$: write
+$0$, move left, enter state $1$.  Acting on an all-$0$ tape it changes
+nothing, so the pair (all-$0$, all-$0$) is frozen with period $12$.  The
+all-$1$ tape decodes to $W\equiv1$, $M\equiv+1$, $S\equiv2$, and
+(all-$1$, all-$1$) is likewise frozen.  Each of these programs writes the
+symbol of which its own code consists.
+
+\paragraph{Tables that write what they read.}
+There are $4^4=256$ tables with $W_q(b)=b$ for all four entries.  Such a
+machine never changes the tape it acts on.  If both machines are of this
+kind then neither tape ever changes, so all $256^2=65{,}536$ such pairs are
+frozen at their initial tables from $t=0$.
+
+\subsection{Results for the reference ensemble}
+
+Table~\ref{tab:rewriting-outcomes} gives the outcome of every initial
+pair.  Ninety percent of pairs end with both programs equal to one of the
+two uniform tapes, and $90.11\%$ end with two identical programs.  The
+transient has mean $35.6$ steps, median $30$, and maximum $397$.  The
+pairs reach $791{,}425$ distinct cycles: $679{,}535$ frozen cycles, which
+cover $539{,}731$ distinct pairs of programs and otherwise differ in head
+phase, and $111{,}890$ cycles on which a program keeps changing.  The
+longest period is $132$, attained by a frozen pair.
+
+\begin{table}[h]
+\centering
+\caption{Outcomes of all $16{,}777{,}216$ ordered pairs of two-state
+tables under mutual rewriting, with both heads started at cell $0$ in
+state $1$.}
+\label{tab:rewriting-outcomes}
+\begin{tabular}{lrr}
+\toprule
+Outcome & Initial pairs & Share \\
+\midrule
+Both programs frozen at the all-$0$ tape & 8,266,669 & 49.27\% \\
+Both programs frozen at the all-$1$ tape & 6,832,632 & 40.73\% \\
+Both programs frozen at their initial tables & 407,333 & 2.43\% \\
+Other frozen pair & 912,052 & 5.44\% \\
+At least one program keeps changing & 358,530 & 2.14\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Attracting tables.}
+The all-$0$ tape has $\omega=0.4927$, about $2018$ times the uniform
+share, and the all-$1$ tape has $\omega=0.4074$, about $1669$ times.  They
+capture $16{,}527{,}452$ and $13{,}659{,}600$ of the
+$2\times16{,}777{,}216$ combinations of pair and machine.  Neither is
+invulnerable: $\sigma=71.9\%$ for the all-$0$ tape and $69.1\%$ for the
+all-$1$ tape, so in more than a quarter of the pairs containing one of
+them it does not survive.  For example, the initial pair (all-$0$, all-$1$)
+ends as (all-$1$, all-$1$) after $15$ steps.  The only other table with a
+notable occupancy is the alternating tape $010\,101\,010\,101$, at $12.3$
+times the uniform share with $\sigma=18.0\%$ and $c=94{,}720$; it is one of
+the tables that write what they read.  No fourth table exceeds $3.5$ times
+the uniform share.
+
+\paragraph{Repelling tables.}
+There are $162$ tables with $\omega=0$, which are never present on any
+cycle reached from the reference ensemble.  A much larger set never
+persists: $2836$ of the $4096$ tables have $\sigma=0$, and $2792$ have
+$c=0$.
+
+\paragraph{Classes by write bits.}
+Table~\ref{tab:rewriting-write-classes} groups the tables by their four
+write bits.  The tables that write what they read are robust without being
+attracting: their mean survival is several times that of any other class,
+none of them has $\omega=0$, and together they hold only $1.9\%$ of the
+late-time occupancy.  The constant-writing classes hold almost all of the
+occupancy, but nearly all of it sits on the two uniform tapes; the mean
+survival within those classes is low, so a constant writer other than a
+uniform tape rarely ends frozen at its own table.
+
+\begin{table}[h]
+\centering
+\caption{Tables grouped by their write bits.  Occupancy is the summed
+$\omega(T)$ of the class; survival is the class mean of $\sigma(T)$.}
+\label{tab:rewriting-write-classes}
+\begin{tabular}{lrrrr}
+\toprule
+Class & Tables & Occupancy & Mean survival & Tables with $\omega=0$ \\
+\midrule
+$W\equiv0$ & 256 & 49.65\% & 2.0\% & 7 \\
+$W\equiv1$ & 256 & 41.10\% & 1.0\% & 3 \\
+$W_q(b)=b$ & 256 & 1.93\% & 15.4\% & 0 \\
+All others & 3328 & 7.31\% & 2.9\% & 152 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The outcome as a vote on write bits.}
+Table~\ref{tab:rewriting-vote} conditions the outcome on the number of
+write-$1$ entries in the two initial tables together.  The probability of
+ending at the all-$1$ pair increases monotonically with that count, and at
+an even split the all-$0$ pair is favored by ten percentage points.  The
+extreme rows are not exactly $100\%$: two machines that only write $0$ can
+freeze with stored $1$s in cells that neither head visits again.
+
+\begin{table}[h]
+\centering
+\caption{Outcome conditioned on the number of write-$1$ entries among the
+eight entries of the two initial tables.}
+\label{tab:rewriting-vote}
+\begin{tabular}{rrrr}
+\toprule
+Write-$1$ entries & Initial pairs & Both all-$0$ & Both all-$1$ \\
+\midrule
+0 & 65,536 & 98.81\% & 0.00\% \\
+1 & 524,288 & 87.48\% & 8.30\% \\
+2 & 1,835,008 & 75.11\% & 16.99\% \\
+3 & 3,670,016 & 62.04\% & 26.80\% \\
+4 & 4,587,520 & 48.84\% & 38.83\% \\
+5 & 3,670,016 & 36.33\% & 53.08\% \\
+6 & 1,835,008 & 24.41\% & 68.60\% \\
+7 & 524,288 & 12.64\% & 84.05\% \\
+8 & 65,536 & 0.00\% & 99.40\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Perpetual rewriting.}
+The $358{,}530$ pairs that never freeze reach $111{,}890$ cycles with
+periods between $4$ and $96$.  In $286{,}646$ of these pairs only one of
+the two programs keeps changing while the other is frozen.  Period $4$
+alone accounts for $228{,}352$ of the pairs.
+
+\subsection{Dependence on the initial head configuration}
+
+The enumeration was repeated in full for three other head starts
+(Table~\ref{tab:rewriting-head-starts}).  The outcome shares move by at
+most about two percentage points, the same three tables lead the
+occupancy ranking in every case, and the all-$0$ pair stays ahead of the
+all-$1$ pair.  The identity of the repelling tables is less stable.  The
+number of tables with $\omega=0$ is $162$, $169$, $165$, and $95$ in the
+four ensembles, but only $66$ tables have $\omega=0$ in all four, while
+$268$ have $\omega=0$ in at least one.  The set that never survives is
+more stable: $2778$ tables have $\sigma=0$ in all four ensembles.
+
+\begin{table}[h]
+\centering
+\caption{Outcome shares, in percent of all $16{,}777{,}216$ ordered pairs,
+for four initial head configurations.  The columns are the five outcomes
+of Table~\ref{tab:rewriting-outcomes} in the same order, and the first row
+is its reference ensemble.}
+\label{tab:rewriting-head-starts}
+\begin{tabular}{ccrrrrr}
+\toprule
+Cells & States & All-$0$ & All-$1$ & Initial & Other frozen & Changing \\
+\midrule
+$(0,0)$ & $(1,1)$ & 49.27 & 40.73 & 2.43 & 5.44 & 2.14 \\
+$(0,0)$ & $(2,2)$ & 48.80 & 40.98 & 2.34 & 6.01 & 1.86 \\
+$(6,6)$ & $(1,1)$ & 47.14 & 42.62 & 2.38 & 5.89 & 1.98 \\
+$(0,6)$ & $(1,1)$ & 48.80 & 41.58 & 2.36 & 5.35 & 1.91 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Interpretation and scope}
+
+\paragraph{Why the uniform tapes dominate.}
+Under the layout~\eqref{eq:program-tape-layout} the stored write bit is
+the symbol written.  A machine that mostly writes $0$ therefore fills its
+partner's tape with $0$s, which turns the partner's write bits, move bits,
+and state bits toward the all-$0$ table, and the partner then writes $0$s
+back.  The uniform tapes are the fixed points of this feedback, and
+Table~\ref{tab:rewriting-vote} is consistent with a competition between
+the two symbols decided largely by the initial write bits.  This account
+is an interpretation of the enumeration.  We have not derived the basin
+sizes, the bias toward the all-$0$ pair, or the conditional probabilities
+in Table~\ref{tab:rewriting-vote}.
+
+\paragraph{Dependence on the encoding.}
+The self-reproducing property of the uniform tapes is a property of the
+encoding, not only of the machines.  If a stored $0$ in a write cell meant
+``write $1$'', the all-$0$ tape would no longer reproduce itself.  The
+ordering of the three fields within an entry and of the four entries along
+the tape also fixes which cells a moving head meets, and we have not
+found a symmetry of the model that exchanges the all-$0$ and all-$1$
+tapes.  No other
+encoding has been run, so the present results do not establish which
+features are generic.
+
+\paragraph{Other limits.}
+The enumeration covers $n=2$ states, two symbols, a $12$-cell tape, and
+exactly two machines.  The four head starts cover a small part of the
+$576$ possible head configurations per pair, and the set of tables with
+$\omega=0$ already shrinks as head starts are added, so it should not be
+read as a set of tables that can never recur.  Larger tables require longer tapes and cannot be
+enumerated exhaustively in the same way.
+
+\paragraph{Reproduction.}
+The implementation is \path{turing_machines/mutual_rewriting.py}, run as
+\texttt{python -m scripts.mutual\_rewriting}; options select the initial head
+cells and states or a random sample of pairs.  The reference run is
+archived in \path{results/mutual_rewriting/} and the other head starts in
+the adjacent \path{mutual_rewriting_states_2_2},
+\path{mutual_rewriting_cells_6_6}, and \path{mutual_rewriting_cells_0_6}
+directories.  Each archive has per-table values of
+$\omega$, $\sigma$, and $c$ in \path{machines.csv}, every attractor in
+\path{attractors.npz}, and the transient, period, and attractor of every
+initial pair in \path{pairs.npz}.  Table identifiers there follow the
+labeling used by \path{alignment_census.py}.  The update rule is tested
+against a scalar implementation written from the equations above, and the
+transients and periods against brute-force cycle detection, in
+\path{tests/test_mutual_rewriting.py}.
 
 \clearpage
 \begingroup

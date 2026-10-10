@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Busy beaver transition rules, scores, and coupled chiral machines in W, M, S notation.">
+  <title>Busy beavers and coupled chiral machines</title>
+    <style>html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */</style>
+    <style>
+    :root { color-scheme: light; --ink: #243044; --muted: #5c6877; --accent: #175d74; --line: #dce3e9; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+    body { margin: 0; background: #f5f7f9; color: var(--ink); font: 17px/1.7 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .layout { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 44px; padding: 48px 36px; }
+    aside { position: sticky; top: 32px; align-self: start; max-height: calc(100vh - 64px); overflow-y: auto; font-size: 14px; }
+    .nav-title { margin: 0 0 14px; font-size: 12px; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    nav ul { list-style: none; padding: 0; margin: 0; }
+    nav ul ul { margin: 12px 0 0; padding-left: 14px; border-left: 2px solid var(--line); }
+    nav li { margin: 0 0 12px; line-height: 1.5; }
+    nav a { text-decoration: none; }
+    main { min-width: 0; padding: 42px 48px; background: white; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 36px #24304406; }
+    h1, h2 { line-height: 1.25; letter-spacing: -.025em; color: #162638; }
+    h1 { margin: 0 0 24px; font-size: clamp(1.9rem, 3.1vw, 2.6rem); }
+    h2 { margin: 52px 0 20px; padding-top: 22px; border-top: 1px solid var(--line); font-size: 1.45rem; }
+    p { margin: 0 0 18px; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    a:hover { color: #0a394a; text-decoration-thickness: 2px; }
+    a:focus-visible, summary:focus-visible { outline: 3px solid #e1a92e; outline-offset: 4px; }
+    strong { font-weight: 700; }
+    ul { padding-left: 24px; }
+    li { margin: 6px 0; }
+    table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: .92em; line-height: 1.5; font-variant-numeric: tabular-nums; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    th { background: #eaf1f5; color: #203d51; font-weight: 650; }
+    tbody tr:nth-child(even) { background: #f8fafb; }
+    tbody tr:hover { background: #edf5f6; }
+    math { font-size: 1.08em; }
+    math[display="block"] { overflow-x: auto; margin: 24px 0; padding: 20px 12px; background: #f5f8fa; border-radius: 6px; }
+    code { font: .88em/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #eef2f5; border-radius: 4px; padding: 2px 5px; overflow-wrap: anywhere; }
+    pre { margin: 24px 0; padding: 20px; overflow-x: auto; background: #f5f7fa; border: 1px solid var(--line); border-radius: 7px; line-height: 1.6; }
+    pre code { padding: 0; background: transparent; overflow-wrap: normal; }
+    div.sourceCode { overflow: visible; }
+    footer { margin-top: 42px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+    .skip { position: absolute; left: 12px; top: -100px; padding: 10px; background: white; }
+    .skip:focus { top: 12px; }
+    @media (max-width: 1050px) {
+      .layout { grid-template-columns: 190px minmax(0, 1fr); gap: 24px; padding: 30px 20px; }
+      main { padding: 30px 28px; }
+      th, td { padding: 10px; }
+    }
+    @media (max-width: 760px) {
+      body { font-size: 16px; }
+      .layout { display: block; padding: 16px; }
+      aside { position: static; max-height: none; margin: 8px 8px 28px; }
+      nav ul ul { columns: 2; column-gap: 24px; }
+      nav li { break-inside: avoid; }
+      main { padding: 26px 20px; }
+      table { display: block; overflow-x: auto; font-size: .85em; }
+      th, td { min-width: 60px; padding: 10px 8px; }
+      h2 { font-size: 1.3rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      body { background: white; font-size: 10pt; }
+      .layout { display: block; max-width: none; padding: 0; }
+      aside, .skip { display: none; }
+      main { padding: 0; border: none; box-shadow: none; }
+      h1 { font-size: 24pt; }
+      h2 { font-size: 15pt; margin-top: 28px; break-after: avoid; }
+      tr, math[display="block"] { break-inside: avoid; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <div class="layout">
+    <aside>
+      <p class="nav-title">Reference collection</p>
+      <nav aria-label="Table of contents"><ul>
+<li><a href="#busy-beavers-and-coupled-chiral-machines"
+id="toc-busy-beavers-and-coupled-chiral-machines">Busy beavers and
+coupled chiral machines</a>
+<ul>
+<li><a href="#conventions" id="toc-conventions">Conventions</a></li>
+<li><a href="#collection-at-a-glance"
+id="toc-collection-at-a-glance">Collection at a glance</a></li>
+<li><a href="#classical-two-state-champion"
+id="toc-classical-two-state-champion">Classical two-state
+champion</a></li>
+<li><a href="#coupled-chiral-pair-a-six-step-bit-flipping-example"
+id="toc-coupled-chiral-pair-a-six-step-bit-flipping-example">Coupled
+chiral pair: a six-step bit-flipping example</a></li>
+<li><a href="#four-state-champion-107-steps-13-ones"
+id="toc-four-state-champion-107-steps-13-ones">Four-state champion: 107
+steps, 13 ones</a></li>
+<li><a href="#another-four-state-productivity-champion-96-steps-13-ones"
+id="toc-another-four-state-productivity-champion-96-steps-13-ones">Another
+four-state productivity champion: 96 steps, 13 ones</a></li>
+<li><a href="#comparison-the-four-mode-cycle-1lto2rto3lto4rto1l"
+id="toc-comparison-the-four-mode-cycle-1lto2rto3lto4rto1l">Comparison:
+the four-mode cycle
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>L</mi><mo>→</mo><mn>2</mn><mi>R</mi><mo>→</mo><mn>3</mn><mi>L</mi><mo>→</mo><mn>4</mn><mi>R</mi><mo>→</mo><mn>1</mn><mi>L</mi></mrow><annotation encoding="application/x-tex">1L\to2R\to3L\to4R\to1L</annotation></semantics></math></a></li>
+<li><a href="#uniform-rule-averages"
+id="toc-uniform-rule-averages">Uniform rule averages</a></li>
+<li><a href="#using-non-halting-parents-to-search-for-candidates"
+id="toc-using-non-halting-parents-to-search-for-candidates">Using
+non-halting parents to search for candidates</a></li>
+<li><a href="#rechecking-the-scores"
+id="toc-rechecking-the-scores">Rechecking the scores</a></li>
+</ul></li>
+</ul></nav>
+    </aside>
+    <main id="content">
+      <h1 id="busy-beavers-and-coupled-chiral-machines">Busy beavers and
+      coupled chiral machines</h1>
+      <p>A reference collection in the notation of <a
+      href="tm-stat-mech.tex">the notes</a>. The champion tables below
+      follow Pascal Michel’s published collection; the chiral examples
+      are our own comparisons. All five scores were checked by direct
+      simulation. Last checked: 2026-09-21.</p>
+      <h2 id="conventions">Conventions</h2>
+      <p>We consider one head on an infinite binary tape, initially all
+      zeros, with
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>0</mn></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x_0=0</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>q</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">q_0=1</annotation></semantics></math>.
+      There are
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+      working states and an additional halt state
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>,
+      which does <strong>not</strong> count toward
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.
+      These are single-machine experiments, not many-agent gases or
+      finite periodic-tape simulations.</p>
+      <p>For the bit
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>=</mo><msub><mi>V</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">b=V_t(x_t)</annotation></semantics></math>
+      read <strong>before</strong> writing, the update is</p>
+      <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msub><mi>W</mi><msub><mi>q</mi><mi>t</mi></msub></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>x</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>x</mi><mi>t</mi></msub><mo>+</mo><msub><mi>M</mi><msub><mi>q</mi><mi>t</mi></msub></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>q</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>S</mi><msub><mi>q</mi><mi>t</mi></msub></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+      V_{t+1}(x_t)=W_{q_t}(b),\qquad
+      x_{t+1}=x_t+M_{q_t}(b),\qquad
+      q_{t+1}=S_{q_t}(b).
+      </annotation></semantics></math></p>
+      <p>All other tape sites are unchanged. Here
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo>=</mo><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">M=-1</annotation></semantics></math>
+      means left and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo>=</mo><mi>+</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">M=+1</annotation></semantics></math>
+      means right. One complete read/write/move/state-change counts as
+      <strong>one step</strong>, including the final transition into
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>.
+      The initial configuration is time zero.</p>
+      <p>For a halting machine, let
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+      denote its number of steps and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+      its number of ones remaining at halt, not the cumulative number of
+      writes. The maxima over halting machines are conventionally called
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(n,2)</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Σ</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Sigma(n,2)</annotation></semantics></math>,
+      respectively. The scalar
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S(n,2)</annotation></semantics></math>
+      is distinct from our next-state function
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(b)</annotation></semantics></math>.</p>
+      <p>In the code, rules have the form
+      <code>tm[q][b] = [write_bit, move_bit, next_state]</code>, where
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo>=</mo><mn>2</mn><mspace width="0.167em"></mspace><mtext mathvariant="monospace">𝚖𝚘𝚟𝚎_𝚋𝚒𝚝</mtext><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">M=2\,\texttt{move_bit}-1</annotation></semantics></math>.
+      The standalone <a href="turing_machines/coupled_chiral_ants.py">chiral-machine
+      simulator</a> uses <code>next_state=0</code> for
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>;
+      this halt encoding is not supported by the many-agent
+      simulator.</p>
+      <h2 id="collection-at-a-glance">Collection at a glance</h2>
+      <p>The established binary-tape maxima are
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">S(2,2)=6</annotation></semantics></math>,
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Σ</mi><mo stretchy="false" form="prefix">(</mo><mn>2</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\Sigma(2,2)=4</annotation></semantics></math>,
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>107</mn></mrow><annotation encoding="application/x-tex">S(4,2)=107</annotation></semantics></math>,
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Σ</mi><mo stretchy="false" form="prefix">(</mo><mn>4</mn><mo>,</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>13</mn></mrow><annotation encoding="application/x-tex">\Sigma(4,2)=13</annotation></semantics></math>.
+      <a href="https://bbchallenge.org/~pascal.michel/bbc">Source:
+      Pascal Michel, Busy Beaver Competitions</a>.</p>
+      <table style="width:100%;">
+      <colgroup>
+      <col style="width: 16%" />
+      <col style="width: 22%" />
+      <col style="width: 22%" />
+      <col style="width: 22%" />
+      <col style="width: 16%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Example</th>
+      <th style="text-align: right;">Working states</th>
+      <th style="text-align: right;">Steps
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math></th>
+      <th style="text-align: right;">Final ones
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math></th>
+      <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Classical two-state champion</td>
+      <td style="text-align: right;">2</td>
+      <td style="text-align: right;">6</td>
+      <td style="text-align: right;">4</td>
+      <td>Maximizes both scores</td>
+      </tr>
+      <tr>
+      <td>Coupled chiral pair
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">LR</annotation></semantics></math>,
+      with a halt</td>
+      <td style="text-align: right;">2</td>
+      <td style="text-align: right;">6</td>
+      <td style="text-align: right;">2</td>
+      <td>Matches the time maximum, not the ones maximum</td>
+      </tr>
+      <tr>
+      <td>Four-state, 107-step champion</td>
+      <td style="text-align: right;">4</td>
+      <td style="text-align: right;">107</td>
+      <td style="text-align: right;">13</td>
+      <td>Maximizes both scores</td>
+      </tr>
+      <tr>
+      <td>Four-state, 96-step champion</td>
+      <td style="text-align: right;">4</td>
+      <td style="text-align: right;">96</td>
+      <td style="text-align: right;">13</td>
+      <td>Maximizes ones, not time</td>
+      </tr>
+      <tr>
+      <td>Cyclic
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>R</mi><mi>L</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">LRLR</annotation></semantics></math>,
+      best single halt insertion</td>
+      <td style="text-align: right;">4</td>
+      <td style="text-align: right;">13</td>
+      <td style="text-align: right;">3</td>
+      <td>Comparison model, not a champion</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>This is a selection of explicit representatives, not an
+      enumeration of all equivalent machines. Reflecting every move
+      preserves both scores on a blank infinite tape, as does
+      consistently relabeling states and the initial state.</p>
+      <h2 id="classical-two-state-champion">Classical two-state
+      champion</h2>
+      <table>
+      <thead>
+      <tr>
+      <th>State
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W_q(b)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">M_q(b)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(0)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(1)</annotation></semantics></math></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>1</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mn>2</mn><mi>b</mi></mrow><annotation encoding="application/x-tex">1-2b</annotation></semantics></math></td>
+      <td>2</td>
+      <td>2</td>
+      </tr>
+      <tr>
+      <td>2</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>b</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2b-1</annotation></semantics></math></td>
+      <td>1</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
+      </tr>
+      </tbody>
+      </table>
+      <p>This machine halts after <strong>6 steps with 4 ones</strong>.
+      Both states always write 1: they have opposite bit-dependent
+      steering, but are not bit-flipping ants. <a
+      href="https://bbchallenge.org/~pascal.michel/ha">Source: Michel’s
+      two-state table</a>.</p>
+      <h2
+      id="coupled-chiral-pair-a-six-step-bit-flipping-example">Coupled
+      chiral pair: a six-step bit-flipping example</h2>
+      <p>Our chirality labels mean</p>
+      <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>:</mo><mspace width="1.0em"></mspace><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mi>b</mi><mo>,</mo><mspace width="1.0em"></mspace><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn><mi>b</mi><mo>−</mo><mn>1</mn><mo>,</mo><mspace width="2.0em"></mspace><mi>R</mi><mo>:</mo><mspace width="1.0em"></mspace><mi>W</mi><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mi>b</mi><mo>,</mo><mspace width="1.0em"></mspace><mi>M</mi><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mn>2</mn><mi>b</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+      L:\quad W(b)=1-b,\quad M(b)=2b-1,
+      \qquad
+      R:\quad W(b)=1-b,\quad M(b)=1-2b.
+      </annotation></semantics></math></p>
+      <p>Thus
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+      moves left on 0 and right on 1, whereas
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>
+      does the reverse. These are internal modes of <strong>one
+      head</strong>, not two separate agents.</p>
+      <p>Start with the non-halting cycle
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>L</mi><mo>→</mo><mn>2</mn><mi>R</mi><mo>→</mo><mn>1</mn><mi>L</mi></mrow><annotation encoding="application/x-tex">1L\to2R\to1L</annotation></semantics></math>,
+      then replace only
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mn>2</mn></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_2(1)</annotation></semantics></math>
+      by
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>:</p>
+      <table>
+      <thead>
+      <tr>
+      <th>State
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W_q(b)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">M_q(b)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(0)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(1)</annotation></semantics></math></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>1
+      (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>)</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">1-b</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>b</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2b-1</annotation></semantics></math></td>
+      <td>2</td>
+      <td>2</td>
+      </tr>
+      <tr>
+      <td>2
+      (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>)</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">1-b</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mn>2</mn><mi>b</mi></mrow><annotation encoding="application/x-tex">1-2b</annotation></semantics></math></td>
+      <td>1</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
+      </tr>
+      </tbody>
+      </table>
+      <p>Direct simulation gives <strong>6 steps and 2 final
+      ones</strong>, at positions
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>2</mn><annotation encoding="application/x-tex">2</annotation></semantics></math>.
+      It matches the two-state time maximum but is not a productivity
+      winner. In particular, its final transition writes 0; we retain
+      that write when inserting the halt, rather than replacing the
+      entire rule with a conventional
+      <code>write 1, move right, halt</code> instruction.</p>
+      <h2 id="four-state-champion-107-steps-13-ones">Four-state
+      champion: 107 steps, 13 ones</h2>
+      <p>This is the champion attaining both four-state maxima. Numbered
+      states
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>,</mo><mn>2</mn><mo>,</mo><mn>3</mn><mo>,</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">1,2,3,4</annotation></semantics></math>
+      correspond to the conventional
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>,</mo><mi>B</mi><mo>,</mo><mi>C</mi><mo>,</mo><mi>D</mi></mrow><annotation encoding="application/x-tex">A,B,C,D</annotation></semantics></math>.
+      <a href="https://bbchallenge.org/~pascal.michel/ha">Source:
+      Michel’s four-state table</a>.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>State
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W_q(b)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">M_q(b)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(0)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(1)</annotation></semantics></math></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>1</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mn>2</mn><mi>b</mi></mrow><annotation encoding="application/x-tex">1-2b</annotation></semantics></math></td>
+      <td>2</td>
+      <td>2</td>
+      </tr>
+      <tr>
+      <td>2</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">1-b</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></td>
+      <td>1</td>
+      <td>3</td>
+      </tr>
+      <tr>
+      <td>3</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mn>2</mn><mi>b</mi></mrow><annotation encoding="application/x-tex">1-2b</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
+      <td>4</td>
+      </tr>
+      <tr>
+      <td>4</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">1-b</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math></td>
+      <td>4</td>
+      <td>1</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>Interpreted as local modes:</p>
+      <ul>
+      <li>States 1 and 3 always write 1 and have
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>-type
+      steering.</li>
+      <li>State 2 flips the bit and always moves left.</li>
+      <li>State 4 flips the bit and always moves right.</li>
+      <li>The next-state routing depends on the read bit; it is not a
+      fixed cycle.</li>
+      </ul>
+      <p>Consequently, <strong>none of its states is exactly an
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+      or
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>
+      bit-flipping ant</strong> as defined above. It combines the
+      steering and writing ingredients differently. The halting event is
+      the first read of 0 in state 3, on step 107.</p>
+      <h2
+      id="another-four-state-productivity-champion-96-steps-13-ones">Another
+      four-state productivity champion: 96 steps, 13 ones</h2>
+      <p>This distinct machine also attains the maximum final number of
+      ones, but does not attain the maximum runtime. <a
+      href="https://bbchallenge.org/~pascal.michel/ha">Source: Michel’s
+      four-state table</a>.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>State
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">W_q(b)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">M_q(b)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(0)</annotation></semantics></math></th>
+      <th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(1)</annotation></semantics></math></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>1</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">1-b</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math></td>
+      <td>2</td>
+      <td>3</td>
+      </tr>
+      <tr>
+      <td>2</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>b</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2b-1</annotation></semantics></math></td>
+      <td>1</td>
+      <td>1</td>
+      </tr>
+      <tr>
+      <td>3</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
+      <td>4</td>
+      </tr>
+      <tr>
+      <td>4</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">1-b</annotation></semantics></math></td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></td>
+      <td>4</td>
+      <td>2</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>Here states 1 and 4 flip while moving in fixed opposite
+      directions; state 2 always writes 1 with
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>-type
+      steering; state 3 always writes 1 and moves right. The halting
+      event is again the first read of 0 in state 3, now on step 96.</p>
+      <p>For both displayed four-state champions, all working states are
+      mutually reachable in the directed transition graph, excluding the
+      halting vertex. Neither decomposes into isolated one-state
+      species. This observation alone does not explain the long runtime:
+      the evolving tape constrains which graph paths are actually
+      followed.</p>
+      <h2
+      id="comparison-the-four-mode-cycle-1lto2rto3lto4rto1l">Comparison:
+      the four-mode cycle
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>L</mi><mo>→</mo><mn>2</mn><mi>R</mi><mo>→</mo><mn>3</mn><mi>L</mi><mo>→</mo><mn>4</mn><mi>R</mi><mo>→</mo><mn>1</mn><mi>L</mi></mrow><annotation encoding="application/x-tex">1L\to2R\to3L\to4R\to1L</annotation></semantics></math></h2>
+      <p>The non-halting parent has</p>
+      <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>−</mo><mi>b</mi><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>M</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>2</mn><mi>b</mi><mo>−</mo><mn>1</mn><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>q</mi><mo>=</mo><mn>1</mn><mo>,</mo><mn>3</mn><mo>,</mo></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn><mo>−</mo><mn>2</mn><mi>b</mi><mo>,</mo></mtd><mtd columnalign="left" style="text-align: left"><mi>q</mi><mo>=</mo><mn>2</mn><mo>,</mo><mn>4</mn><mo>,</mo></mtd></mtr></mtable></mrow><mspace width="2.0em"></mspace><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>1</mn><mo>+</mo><mo stretchy="false" form="prefix">(</mo><mi>q</mi><mrow><mspace width="0.222em"></mspace><mrow><mi mathvariant="normal">mod</mi><mo>&#8289;</mo></mrow><mspace width="0.222em"></mspace><mn>4</mn></mrow><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+      W_q(b)=1-b,\qquad
+      M_q(b)=
+      \begin{cases}
+      2b-1,&amp;q=1,3,\\
+      1-2b,&amp;q=2,4,
+      \end{cases}
+      \qquad
+      S_q(b)=1+(q\bmod4).
+      </annotation></semantics></math></p>
+      <p>Replacing one of its eight next-state entries by
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>,
+      without changing the write or move, gives the following exhaustive
+      results:</p>
+      <table>
+      <thead>
+      <tr>
+      <th>Halt at state
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math></th>
+      <th>Read bit
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math></th>
+      <th style="text-align: right;">Steps</th>
+      <th style="text-align: right;">Final ones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>1</td>
+      <td>0</td>
+      <td style="text-align: right;">1</td>
+      <td style="text-align: right;">1</td>
+      </tr>
+      <tr>
+      <td>1</td>
+      <td>1</td>
+      <td style="text-align: right;">13</td>
+      <td style="text-align: right;">3</td>
+      </tr>
+      <tr>
+      <td>2</td>
+      <td>0</td>
+      <td style="text-align: right;">2</td>
+      <td style="text-align: right;">2</td>
+      </tr>
+      <tr>
+      <td>2</td>
+      <td>1</td>
+      <td style="text-align: right;">6</td>
+      <td style="text-align: right;">2</td>
+      </tr>
+      <tr>
+      <td>3</td>
+      <td>0</td>
+      <td style="text-align: right;">7</td>
+      <td style="text-align: right;">3</td>
+      </tr>
+      <tr>
+      <td>3</td>
+      <td>1</td>
+      <td style="text-align: right;">3</td>
+      <td style="text-align: right;">1</td>
+      </tr>
+      <tr>
+      <td>4</td>
+      <td>0</td>
+      <td style="text-align: right;">4</td>
+      <td style="text-align: right;">2</td>
+      </tr>
+      <tr>
+      <td>4</td>
+      <td>1</td>
+      <td style="text-align: right;">8</td>
+      <td style="text-align: right;">2</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>The longest run halts at
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(q,b)=(1,1)</annotation></semantics></math>
+      after <strong>13 steps</strong>, leaving ones at
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>−</mi><mn>3</mn><mo>,</mo><mi>−</mi><mn>1</mn><mo>,</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">-3,-1,2</annotation></semantics></math>.
+      All eight placements halt, so these are resolved scores, not
+      time-budget lower bounds. This cycle does not attain either
+      four-state record.</p>
+      <p>Before adding a halt, identifying states 1 and 3 with
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>,
+      and 2 and 4 with
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>R</mi><annotation encoding="application/x-tex">R</annotation></semantics></math>,
+      reproduces the two-state
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">LR</annotation></semantics></math>
+      head-and-tape trajectory exactly. The extra labels record the
+      phase modulo four. A halt can distinguish those labels, but the
+      parent has no new tape dynamics under this projection.</p>
+      <p><a href="results/coupled_chiral_ants_LRLR/README.md">Full
+      results and reproduction command</a> and <a
+      href="results/coupled_chiral_ants_LRLR/spacetime_best.pdf">spacetime
+      plot</a>. The plot uses light for 1, dark for 0, and red for the
+      head.</p>
+      <h2 id="uniform-rule-averages">Uniform rule averages</h2>
+      <p>For comparison with our zoo, define the averages over all
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">2n</annotation></semantics></math>
+      rule entries, including the halting entry:</p>
+      <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>W</mi><mo accent="true">¯</mo></mover><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>n</mi></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>q</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><munderover><mo>∑</mo><mrow><mi>b</mi><mo>=</mo><mn>0</mn></mrow><mn>1</mn></munderover><msub><mi>W</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mover><mi>M</mi><mo accent="true">¯</mo></mover><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>n</mi></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>q</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><munderover><mo>∑</mo><mrow><mi>b</mi><mo>=</mo><mn>0</mn></mrow><mn>1</mn></munderover><msub><mi>M</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+      \overline W=\frac{1}{2n}\sum_{q=1}^n\sum_{b=0}^1 W_q(b),
+      \qquad
+      \overline M=\frac{1}{2n}\sum_{q=1}^n\sum_{b=0}^1 M_q(b).
+      </annotation></semantics></math></p>
+      <table>
+      <thead>
+      <tr>
+      <th>Example</th>
+      <th
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>W</mi><mo accent="true">¯</mo></mover><annotation encoding="application/x-tex">\overline W</annotation></semantics></math></th>
+      <th
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>M</mi><mo accent="true">¯</mo></mover><annotation encoding="application/x-tex">\overline M</annotation></semantics></math></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Classical two-state champion</td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math></td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math></td>
+      </tr>
+      <tr>
+      <td>Coupled chiral pair
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">LR</annotation></semantics></math></td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math></td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math></td>
+      </tr>
+      <tr>
+      <td>Four-state 107-step champion</td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>/</mi><mn>4</mn></mrow><annotation encoding="application/x-tex">3/4</annotation></semantics></math></td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math></td>
+      </tr>
+      <tr>
+      <td>Four-state 96-step champion</td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>/</mi><mn>4</mn></mrow><annotation encoding="application/x-tex">3/4</annotation></semantics></math></td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>4</mn></mrow><annotation encoding="application/x-tex">1/4</annotation></semantics></math></td>
+      </tr>
+      <tr>
+      <td>Four-mode cycle
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>R</mi><mi>L</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">LRLR</annotation></semantics></math>,
+      any halt insertion</td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math></td>
+      <td
+      style="text-align: right;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math></td>
+      </tr>
+      </tbody>
+      </table>
+      <p>These are properties of the rule tables, not time averages. In
+      particular,
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>M</mi><mo accent="true">¯</mo></mover><annotation encoding="application/x-tex">\overline M</annotation></semantics></math>
+      need not equal the measured head velocity, since the trajectory
+      does not generally sample state/read pairs uniformly.</p>
+      <h2 id="using-non-halting-parents-to-search-for-candidates">Using
+      non-halting parents to search for candidates</h2>
+      <p>For a parent machine without a halt, define the first execution
+      time of a rule:</p>
+      <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mrow><mi>q</mi><mo>,</mo><mi>b</mi></mrow></msub><mo>=</mo><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">{</mo><mi>t</mi><mo>+</mo><mn>1</mn><mo>:</mo><msub><mi>q</mi><mi>t</mi></msub><mo>=</mo><mi>q</mi><mo>,</mo><mspace width="0.222em"></mspace><msub><mi>V</mi><mi>t</mi></msub><mo stretchy="false" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>b</mi><mo stretchy="false" form="postfix">}</mo><mo>,</mo></mrow><annotation encoding="application/x-tex">
+      \tau_{q,b}=\min\{t+1:q_t=q,\ V_t(x_t)=b\},
+      </annotation></semantics></math></p>
+      <p>with
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mrow><mi>q</mi><mo>,</mo><mi>b</mi></mrow></msub><mo>=</mo><mi>∞</mi></mrow><annotation encoding="application/x-tex">\tau_{q,b}=\infty</annotation></semantics></math>
+      if it is never used. Replacing only
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>q</mi></msub><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">S_q(b)</annotation></semantics></math>
+      by
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math>
+      makes the altered machine halt at exactly
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>τ</mi><mrow><mi>q</mi><mo>,</mo><mi>b</mi></mrow></msub><annotation encoding="application/x-tex">\tau_{q,b}</annotation></semantics></math>,
+      if finite. The two trajectories agree through the write and move
+      of that final step. Thus the best runtime among single halt
+      insertions is the largest finite first-use time, not a state-graph
+      cycle length.</p>
+      <p>Productivity must be evaluated separately: it is the number of
+      ones after that particular write. An exact recurrence of the full
+      configuration
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>x</mi><mo>,</mo><mi>V</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(q,x,V)</annotation></semantics></math>
+      before an unvisited halt rule is reached instead certifies that
+      the corresponding halt insertion will never be encountered. A
+      simulation timeout alone does not certify non-halting.</p>
+      <h2 id="rechecking-the-scores">Rechecking the scores</h2>
+      <p>From the project root, the following uses signed moves in
+      <code>rules</code>, converts them to the simulator’s move-bit
+      encoding, and checks the five examples:</p>
+      <div class="sourceCode" id="cb1"><pre
+      class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv/bin/python</span> <span class="at">-</span> <span class="op">&lt;&lt;&#39;PY&#39;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">from turing_machines.coupled_chiral_ants import evaluate, simulate, make_chiral_tm, with_halt</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st"># Each row contains read-0 and read-1 triples (write, signed move, next).</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st"># Working states are 1-based; next=0 denotes Halt.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st">rules = {</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;two_state&quot;: [</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, +1, 2), (1, -1, 2)],</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, -1, 1), (1, +1, 0)],</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">    ],</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;four_state_107&quot;: [</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, +1, 2), (1, -1, 2)],</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, -1, 1), (0, -1, 3)],</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, +1, 0), (1, -1, 4)],</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, +1, 4), (0, +1, 1)],</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="st">    ],</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;four_state_96&quot;: [</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, +1, 2), (0, +1, 3)],</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, -1, 1), (1, +1, 1)],</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, +1, 0), (1, +1, 4)],</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="st">        [(1, -1, 4), (0, -1, 2)],</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="st">    ],</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="st">expected = {&quot;two_state&quot;: (6, 4), &quot;four_state_107&quot;: (107, 13),</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="st">            &quot;four_state_96&quot;: (96, 13)}</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="st">for name, rows in rules.items():</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="st">    tm = {q: {b: [w, (m + 1) // 2, s]</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="st">              for b, (w, m, s) in enumerate(row)}</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="st">          for q, row in enumerate(rows, 1)}</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="st">    result = simulate(tm, 200)</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="st">    score = result[&quot;steps&quot;], result[&quot;ones&quot;]</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="st">    assert result[&quot;halted&quot;] and score == expected[name]</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="st">    print(name, score)</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="st">result = simulate(with_halt(make_chiral_tm(&quot;LR&quot;), 2, 1), 200)</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="st">assert result[&quot;halted&quot;] and (result[&quot;steps&quot;], result[&quot;ones&quot;]) == (6, 2)</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="st">print(&quot;chiral_LR&quot;, (result[&quot;steps&quot;], result[&quot;ones&quot;]))</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="st">_, _, _, variants = evaluate(&quot;LRLR&quot;, 200)</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="st">assert all(result[&quot;halted&quot;] for result in variants.values())</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="st">best = max(variants.values(), key=lambda result: result[&quot;steps&quot;])</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="st">assert (best[&quot;steps&quot;], best[&quot;ones&quot;]) == (13, 3)</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="st">assert max(result[&quot;ones&quot;] for result in variants.values()) == 3</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="st">print(&quot;chiral_LRLR_best&quot;, (best[&quot;steps&quot;], best[&quot;ones&quot;]))</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="op">PY</span></span></code></pre></div>
+      <p>These finite simulations verify the displayed machines’ scores,
+      not the global Busy Beaver upper bounds; those rely on the
+      established results cited above.</p>
+      <footer>
+        <a href="busybeavers.md">Markdown source</a> · Equations use native MathML.
+        This page needs no JavaScript or internet connection to render.
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

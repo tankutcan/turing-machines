@@ -1,6 +1,6 @@
 # Figures used in tm-stat-mech.tex
 
-The spacetime-zoo appendix embeds the 13 PDFs in this folder. They are byte-for-byte copies of the archived contact sheets, containing 1,216 panels in total. No simulations or image resampling were performed when adding them to the notes.
+The spacetime-zoo appendix embeds the 13 original PDFs listed below. They are byte-for-byte copies of the archived contact sheets, containing 1,216 panels in total. No simulations or image resampling were performed when adding them to the notes. The additional rule-ordered two-state zoo and its data are stored in [results/two_state_rule_averages](../results/two_state_rule_averages/README.md).
 
 Captions and reading conventions are maintained in `tm-stat-mech.tex`. `zoo-manifest.json` records each figure's source, checksum, complete original configuration, and normalized parameters. Older configurations omit fields that were then fixed simulator conventions: identical machines, fixed initial state 1, synchronous updating, and an unbounded tape. Those legacy defaults are recorded explicitly rather than presented as original metadata.
 
@@ -42,4 +42,3 @@ bibtex tm-stat-mech
 pdflatex -interaction=nonstopmode -halt-on-error tm-stat-mech.tex
 pdflatex -interaction=nonstopmode -halt-on-error tm-stat-mech.tex
 ```
-

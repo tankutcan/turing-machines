@@ -1,7 +1,8 @@
-\contentsline {section}{\numberline {1}Turing Machines}{1}{section.1}%
-\contentsline {section}{\numberline {2}Langton's Ant}{2}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Turmitic Solitons}{3}{subsection.2.1}%
-\contentsline {section}{\numberline {3}Simplest Turing Machines}{4}{section.3}%
+\contentsline {section}{\numberline {1}Turing Machines}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}One-State Turing Machine: Langton's Ant}{2}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Turmitic Solitons}{4}{subsubsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.2}Two-State Turing Machines: Multi-species turmites}{4}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Multi-agent systems}{4}{section.2}%
 \contentsline {section}{\numberline {A}Prior Works}{5}{appendix.A}%
 \contentsline {subsection}{\numberline {A.1}Cellular automata, mobile automata, and rule-space surveys}{5}{subsection.A.1}%
 \contentsline {subsection}{\numberline {A.2}Interacting turmites and shared-tape agents}{5}{subsection.A.2}%
@@ -26,3 +27,28 @@
 \contentsline {paragraph}{Reading the plots.}{17}{section*.11}%
 \contentsline {paragraph}{Ensembles and initial conditions.}{17}{section*.12}%
 \contentsline {paragraph}{Updates, boundaries, and panel labels.}{17}{section*.13}%
+\contentsline {section}{\numberline {D}Halting-time distributions: exact identities and a route to a solution}{31}{appendix.D}%
+\contentsline {subsection}{\numberline {D.1}Ensemble and halting-time convention}{31}{subsection.D.1}%
+\contentsline {subsection}{\numberline {D.2}An exact reduction to discovery of transition entries}{31}{subsection.D.2}%
+\contentsline {paragraph}{Exact identity and proof.}{32}{section*.27}%
+\contentsline {subsection}{\numberline {D.3}First exact coefficients and numerical checks}{32}{subsection.D.3}%
+\contentsline {subsection}{\numberline {D.4}Exact enumeration by deferred sampling}{33}{subsection.D.4}%
+\contentsline {subsection}{\numberline {D.5}An exactly solvable right-moving subclass}{34}{subsection.D.5}%
+\contentsline {subsection}{\numberline {D.6}What remains to prove about the long-time tail}{34}{subsection.D.6}%
+\contentsline {section}{\numberline {E}Mutual rewriting of two program tapes}{35}{appendix.E}%
+\contentsline {subsection}{\numberline {E.1}Model and encoding}{35}{subsection.E.1}%
+\contentsline {subsection}{\numberline {E.2}Attractors and per-table observables}{36}{subsection.E.2}%
+\contentsline {subsection}{\numberline {E.3}Exact structural statements}{36}{subsection.E.3}%
+\contentsline {paragraph}{Uniform tapes.}{36}{section*.28}%
+\contentsline {paragraph}{Tables that write what they read.}{36}{section*.29}%
+\contentsline {subsection}{\numberline {E.4}Results for the reference ensemble}{37}{subsection.E.4}%
+\contentsline {paragraph}{Attracting tables.}{37}{section*.31}%
+\contentsline {paragraph}{Repelling tables.}{37}{section*.32}%
+\contentsline {paragraph}{Classes by write bits.}{37}{section*.33}%
+\contentsline {paragraph}{The outcome as a vote on write bits.}{38}{section*.35}%
+\contentsline {paragraph}{Perpetual rewriting.}{38}{section*.37}%
+\contentsline {subsection}{\numberline {E.5}Interpretation and scope}{38}{subsection.E.5}%
+\contentsline {paragraph}{Why the uniform tapes dominate.}{38}{section*.38}%
+\contentsline {paragraph}{Dependence on the encoding.}{39}{section*.39}%
+\contentsline {paragraph}{Other limits.}{39}{section*.40}%
+\contentsline {paragraph}{Reproduction.}{39}{section*.41}%
